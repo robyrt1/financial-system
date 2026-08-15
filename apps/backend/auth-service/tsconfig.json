@@ -1,0 +1,21 @@
+{
+  "extends": "@financial-system/ts-config/node.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@application/*": [
+        "./src/application/*"
+      ],
+      "@infrastructure/*": [
+        "./src/infrastructure/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "test"
+  ]
+}

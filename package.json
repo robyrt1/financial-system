@@ -1,0 +1,15 @@
+{
+  "name": "financial-system",
+  "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "devDependencies": {
+    "@financial-system/eslint-config": "workspace:*",
+    "@financial-system/ts-config": "workspace:*"
+  }
+}
