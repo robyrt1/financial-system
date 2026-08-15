@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  financial_system_database_dev:
+    profiles: [ "dev" ]
+    image: postgres:15
+    container_name: financial_system_database_dev
+    env_file:
+      - .env.development
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-financial_system_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-financial_system_password}
+      - POSTGRES_DB=${POSTGRES_DB:-financial_system}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - financial_system_backend_dev_net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  financial_system_backend_dev_net:
