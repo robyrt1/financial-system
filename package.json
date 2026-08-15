@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "@financial-system/eslint-config": "workspace:*",
-    "@financial-system/ts-config": "workspace:*"
+    "@financial-system/ts-config": "workspace:*",
+    "@financial-system/shared-errors": "workspace:*",
+    "@financial-system/shared-services": "workspace:*"
   }
 }

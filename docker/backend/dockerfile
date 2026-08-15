@@ -1,0 +1,37 @@
+FROM node:24-alpine as builder
+WORKDIR /app
+
+ARG path_service_to_build
+ARG env=development
+ARG port=3000
+
+COPY package.json pnpm-lock.yaml .npmrc ./pnpm-workspace.yaml ./
+COPY packages/shared-errors/package.json packages/shared-errors/tsconfig.json ./packages/shared-errors/
+COPY packages/shared-validations/package.json packages/shared-validations/tsconfig.json ./packages/shared-validations/
+COPY packages/shared-errors/src ./packages/shared-errors/src
+COPY packages/shared-validations/src ./packages/shared-validations/src
+COPY apps/backend/${path_service_to_build}/package.json apps/backend/${path_service_to_build}/tsconfig.json ./apps/backend/${path_service_to_build}/
+COPY apps/backend/${path_service_to_build}/src ./apps/backend/${path_service_to_build}/src
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @financial-system/${path_service_to_build} build
+
+FROM node:24-alpine as runtime
+WORKDIR /app
+
+ARG path_service_to_build
+ARG env=development
+ARG port=3000
+
+COPY package.json pnpm-lock.yaml .npmrc ./pnpm-workspace.yaml ./
+COPY packages/shared-errors/package.json ./packages/shared-errors/
+COPY packages/shared-validations/package.json ./packages/shared-validations/
+COPY apps/backend/${path_service_to_build}/package.json ./apps/backend/${path_service_to_build}/
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/backend/${path_service_to_build}/dist ./apps/backend/${path_service_to_build}/dist
+
+ENV NODE_ENV=${env}
+ENV PORT=${port}
+EXPOSE ${port}
+
+CMD ["node", "apps/backend/${path_service_to_build}/dist/main.js"]

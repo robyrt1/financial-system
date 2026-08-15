@@ -1,31 +1,117 @@
 version: '3.9'
 
 services:
-  financial_system_database_dev:
+  api-gateway_dev:
     profiles: [ "dev" ]
-    image: postgres:15
-    container_name: financial_system_database_dev
+    build:
+      context: ./
+      dockerfile: docker/backend/dockerfile
+      args:
+        - path_service_to_build=api-gateway
+        - env=development
+        - port=3000
+    container_name: financial_system_backend_api_gateway_dev
+    ports:
+      - "3000:3000"
     env_file:
       - .env.development
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER:-financial_system_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-financial_system_password}
-      - POSTGRES_DB=${POSTGRES_DB:-financial_system}
-    ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-    volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
     networks:
       - financial_system_backend_dev_net
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
+      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
 
-volumes:
-  postgres_data_dev:
+  auth_dev:
+    profiles: [ "dev" ]
+    build:
+      context: ./
+      dockerfile: docker/backend/dockerfile
+      args:
+        - path_service_to_build=auth
+        - env=development
+        - port=3001
+    container_name: financial_system_backend_auth_dev
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.development
+    networks:
+      - financial_system_backend_dev_net
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
 
-networks:
-  financial_system_backend_dev_net:
+  users_dev:
+    profiles: [ "dev" ]
+    build:
+      context: ./
+      dockerfile: docker/backend/dockerfile
+      args:
+        - path_service_to_build=users
+        - env=development
+        - port=3002
+    container_name: financial_system_backend_users_dev
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env.development
+    networks:
+      - financial_system_backend_dev_net
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  transactions_dev:
+    profiles: [ "dev" ]
+    build:
+      context: ./
+      dockerfile: docker/backend/dockerfile
+      args:
+        - path_service_to_build=transactions
+        - env=development
+        - port=3003
+    container_name: financial_system_backend_transactions_dev
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env.development
+    networks:
+      - financial_system_backend_dev_net
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  accounts_dev:
+    profiles: [ "dev" ]
+    build:
+      context: ./
+      dockerfile: docker/backend/dockerfile
+      args:
+        - path_service_to_build=accounts
+        - env=development
+        - port=3004
+    container_name: financial_system_backend_accounts_dev
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env.development
+    networks:
+      - financial_system_backend_dev_net
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s

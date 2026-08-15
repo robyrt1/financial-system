@@ -1,0 +1,24 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from '@infrastructure/app.module';
+import { GlobalExceptionFilter } from '@infrastructure/adapters/in/http/filters/domain-exception.filter';
+import { ConfigService } from '@nestjs/config';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT', 3000);
+  const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:5173');
+
+  app.enableCors({
+    origin: frontendUrl,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-correlation-id'],
+  });
+
+  app.enableShutdownHooks();
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
+  await app.listen(port);
+}
+bootstrap();
