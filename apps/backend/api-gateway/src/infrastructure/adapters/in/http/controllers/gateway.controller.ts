@@ -2,11 +2,11 @@ import { All, Controller, Inject, Req, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import {
     type RouteRequestPort,
-} from '@domain/ports/in/route-request.port.js';
+} from '@domain/ports/in/route-request.port';
 import {
     GatewayAuthGuard,
     type AuthenticatedRequest,
-} from '@infrastructure/adapters/in/http/guards/guards/gateway-auth.guard.js';
+} from '@infrastructure/adapters/in/http/guards/guards/gateway-auth.guard';
 import { DI_TOKENS } from '@infrastructure/di/tokens';
 
 @Controller('api/v1')

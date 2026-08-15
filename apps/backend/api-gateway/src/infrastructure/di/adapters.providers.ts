@@ -1,55 +1,20 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Redis } from 'ioredis';
-import { CachePort } from '@domain/ports/out/cache.port.js';
+import { Provider } from '@nestjs/common';
+import { DI_TOKENS } from '@infrastructure/di/tokens';
+import { JwtVerifierAdapter } from '@infrastructure/adapters/out/jwt/jwt-verifier.adapter';
+import { AxiosProxyAdapter } from '@infrastructure/adapters/out/proxy/axios-proxy.adapter';
+import { RedisCacheAdapter } from '@infrastructure/adapters/out/redis/redis-cache.adapter';
 
-@Injectable()
-export class RedisCacheAdapter implements CachePort, OnModuleInit, OnModuleDestroy {
-    private redisClient!: Redis;
-
-    constructor(private readonly configService: ConfigService) { }
-
-    onModuleInit() {
-        const host = this.configService.get<string>('REDIS_HOST', 'localhost');
-        const port = this.configService.get<number>('REDIS_PORT', 6379);
-
-        this.redisClient = new Redis({
-            host,
-            port,
-            lazyConnect: true,
-            maxRetriesPerRequest: 3,
-        });
-    }
-
-    async onModuleDestroy() {
-        await this.redisClient?.quit();
-    }
-
-    async get(key: string): Promise<string | null> {
-        return this.redisClient.get(key);
-    }
-
-    async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
-        if (ttlSeconds) {
-            await this.redisClient.set(key, value, 'EX', ttlSeconds);
-        } else {
-            await this.redisClient.set(key, value);
-        }
-    }
-
-    async del(key: string): Promise<void> {
-        await this.redisClient.del(key);
-    }
-
-    async increment(key: string, ttlSeconds?: number): Promise<number> {
-        const multi = this.redisClient.multi();
-        multi.incr(key);
-        if (ttlSeconds) {
-            multi.expire(key, ttlSeconds);
-        }
-        const results = await multi.exec();
-        const [err, count] = results?.[0] ?? [null, 0];
-        if (err) throw err;
-        return Number(count);
-    }
-}
+export const adapterProviders: Provider[] = [
+    {
+        provide: DI_TOKENS.TOKEN_VERIFIER_PORT,
+        useClass: JwtVerifierAdapter,
+    },
+    {
+        provide: DI_TOKENS.HTTP_PROXY_PORT,
+        useClass: AxiosProxyAdapter,
+    },
+    {
+        provide: DI_TOKENS.CACHE_PORT,
+        useClass: RedisCacheAdapter,
+    },
+];

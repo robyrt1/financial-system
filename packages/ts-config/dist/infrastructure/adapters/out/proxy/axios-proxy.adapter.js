@@ -13,7 +13,7 @@ exports.AxiosProxyAdapter = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
 const rxjs_1 = require("rxjs");
-const gateway_errors_js_1 = require("@domain/errors/gateway-errors.js");
+const gateway_errors_1 = require("../../../../domain/errors/gateway-errors");
 let AxiosProxyAdapter = class AxiosProxyAdapter {
     httpService;
     constructor(httpService) {
@@ -36,7 +36,7 @@ let AxiosProxyAdapter = class AxiosProxyAdapter {
             };
         }
         catch {
-            throw new gateway_errors_js_1.ServiceUnavailableError(input.targetUrl);
+            throw new gateway_errors_1.ServiceUnavailableError(input.targetUrl);
         }
     }
 };

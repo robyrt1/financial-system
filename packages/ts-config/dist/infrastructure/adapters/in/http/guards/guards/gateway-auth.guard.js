@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GatewayAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
-const validate_token_port_js_1 = require("@domain/ports/in/validate-token.port.js");
+const tokens_1 = require("../../../../../di/tokens");
 let GatewayAuthGuard = class GatewayAuthGuard {
     validateTokenPort;
     constructor(validateTokenPort) {
@@ -35,6 +35,6 @@ let GatewayAuthGuard = class GatewayAuthGuard {
 exports.GatewayAuthGuard = GatewayAuthGuard;
 exports.GatewayAuthGuard = GatewayAuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)(validate_token_port_js_1.VALIDATE_TOKEN_PORT)),
+    __param(0, (0, common_1.Inject)(tokens_1.DI_TOKENS.VALIDATE_TOKEN_PORT)),
     __metadata("design:paramtypes", [Object])
 ], GatewayAuthGuard);

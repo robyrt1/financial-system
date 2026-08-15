@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { TokenVerifierPort } from '@domain/ports/out/token-verifier.port.js';
-import { UserSession } from '@domain/entities/user-session.entity.js';
-import { TokenExpiredOrInvalidError } from '@domain/errors/gateway-errors.js';
+import { TokenVerifierPort } from '@domain/ports/out/token-verifier.port';
+import { UserSession } from '@domain/entities/user-session.entity';
+import { TokenExpiredOrInvalidError } from '@domain/errors/gateway-errors';
 
 interface JwtPayload {
     sub: string;

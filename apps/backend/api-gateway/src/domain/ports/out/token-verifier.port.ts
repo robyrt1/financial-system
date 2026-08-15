@@ -1,4 +1,4 @@
-import { UserSession } from '@domain/entities/user-session.entity.js';
+import { UserSession } from '@domain/entities/user-session.entity';
 
 export interface TokenVerifierPort {
   verify(token: string): Promise<UserSession>;

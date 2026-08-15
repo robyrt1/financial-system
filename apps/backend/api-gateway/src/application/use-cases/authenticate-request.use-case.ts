@@ -1,5 +1,5 @@
-import { TokenVerifierPort } from '@domain/ports/out/token-verifier.port.js';
-import { UserSession } from '@domain/entities/user-session.entity.js';
+import { TokenVerifierPort } from '@domain/ports/out/token-verifier.port';
+import { UserSession } from '@domain/entities/user-session.entity';
 import {
   MissingTokenError,
   TokenExpiredOrInvalidError,

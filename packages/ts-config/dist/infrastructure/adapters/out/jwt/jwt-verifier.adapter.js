@@ -46,8 +46,8 @@ exports.JwtVerifierAdapter = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt = __importStar(require("jsonwebtoken"));
-const user_session_entity_js_1 = require("@domain/entities/user-session.entity.js");
-const gateway_errors_js_1 = require("@domain/errors/gateway-errors.js");
+const user_session_entity_1 = require("../../../../domain/entities/user-session.entity");
+const gateway_errors_1 = require("../../../../domain/errors/gateway-errors");
 let JwtVerifierAdapter = class JwtVerifierAdapter {
     secret;
     constructor(configService) {
@@ -56,10 +56,10 @@ let JwtVerifierAdapter = class JwtVerifierAdapter {
     async verify(token) {
         try {
             const decoded = jwt.verify(token, this.secret);
-            return new user_session_entity_js_1.UserSession(decoded.sub, decoded.email, decoded.roles ?? []);
+            return new user_session_entity_1.UserSession(decoded.sub, decoded.email, decoded.roles ?? []);
         }
         catch {
-            throw new gateway_errors_js_1.TokenExpiredOrInvalidError();
+            throw new gateway_errors_1.TokenExpiredOrInvalidError();
         }
     }
 };

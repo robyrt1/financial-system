@@ -1,11 +1,11 @@
-import { RouteRequestPort } from '@domain/ports/in/route-request.port.js';
-import { HttpProxyPort } from '@domain/ports/out/http-proxy.port.js';
+import { RouteRequestPort } from '@domain/ports/in/route-request.port';
+import { HttpProxyPort } from '@domain/ports/out/http-proxy.port';
 import { ServiceUnavailableError } from '@domain/errors/gateway-errors';
 import { EnvironmentServicePort } from '@domain/ports/out/enviroment-service.port';
 import {
   ForwardRequestDto,
   ProxyResponseDto,
-} from '@application/dtos/proxy-request.dto.js';
+} from '@application/dtos/proxy-request.dto';
 
 export class ForwardRequestUseCase implements RouteRequestPort {
   constructor(

@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GatewayController = void 0;
 const common_1 = require("@nestjs/common");
-const route_request_port_js_1 = require("@domain/ports/in/route-request.port.js");
-const gateway_auth_guard_js_1 = require("@infrastructure/adapters/in/http/guards/guards/gateway-auth.guard.js");
+const gateway_auth_guard_1 = require("../guards/guards/gateway-auth.guard");
+const tokens_1 = require("../../../../di/tokens");
 let GatewayController = class GatewayController {
     routeRequestPort;
     constructor(routeRequestPort) {
@@ -71,7 +71,7 @@ __decorate([
 ], GatewayController.prototype, "handleAuth", null);
 __decorate([
     (0, common_1.All)('core/*'),
-    (0, common_1.UseGuards)(gateway_auth_guard_js_1.GatewayAuthGuard),
+    (0, common_1.UseGuards)(gateway_auth_guard_1.GatewayAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -80,7 +80,7 @@ __decorate([
 ], GatewayController.prototype, "handleCoreBanking", null);
 __decorate([
     (0, common_1.All)('analytics/*'),
-    (0, common_1.UseGuards)(gateway_auth_guard_js_1.GatewayAuthGuard),
+    (0, common_1.UseGuards)(gateway_auth_guard_1.GatewayAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -89,6 +89,6 @@ __decorate([
 ], GatewayController.prototype, "handleAnalytics", null);
 exports.GatewayController = GatewayController = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __param(0, (0, common_1.Inject)(route_request_port_js_1.ROUTE_REQUEST_PORT)),
+    __param(0, (0, common_1.Inject)(tokens_1.DI_TOKENS.ROUTE_REQUEST_PORT)),
     __metadata("design:paramtypes", [Object])
 ], GatewayController);

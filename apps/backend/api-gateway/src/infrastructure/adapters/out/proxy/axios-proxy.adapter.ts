@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { HttpProxyPort, ProxyRequestInput } from '@domain/ports/out/http-proxy.port.js';
-import { ProxyResponseDto } from '@application/dtos/proxy-request.dto.js';
-import { ServiceUnavailableError } from '@domain/errors/gateway-errors.js';
+import { HttpProxyPort, ProxyRequestInput } from '@domain/ports/out/http-proxy.port';
+import { ProxyResponseDto } from '@application/dtos/proxy-request.dto';
+import { ServiceUnavailableError } from '@domain/errors/gateway-errors';
 
 @Injectable()
 export class AxiosProxyAdapter implements HttpProxyPort {

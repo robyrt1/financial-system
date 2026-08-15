@@ -7,8 +7,8 @@ import {
 import { Request } from 'express';
 import {
     type ValidateTokenPort,
-} from '@domain/ports/in/validate-token.port.js';
-import { AuthenticatedUserDto } from '@application/dtos/authenticated-user.dto.js';
+} from '@domain/ports/in/validate-token.port';
+import { AuthenticatedUserDto } from '@application/dtos/authenticated-user.dto';
 import { DI_TOKENS } from '@infrastructure/di/tokens';
 
 export interface AuthenticatedRequest extends Request {

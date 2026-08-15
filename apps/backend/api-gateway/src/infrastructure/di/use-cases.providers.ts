@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
-import { DI_TOKENS } from '@infrastructure/di/tokens.js';
-import { AuthenticateRequestUseCase } from '@application/use-cases/authenticate-request.use-case.js';
-import { ForwardRequestUseCase } from '@application/use-cases/forward-request.use-case.js';
+import { DI_TOKENS } from '@infrastructure/di/tokens';
+import { AuthenticateRequestUseCase } from '@application/use-cases/authenticate-request.use-case';
+import { ForwardRequestUseCase } from '@application/use-cases/forward-request.use-case';
 
 export const useCaseProviders: Provider[] = [
     {
