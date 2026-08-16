@@ -2,4 +2,6 @@ packages:
   - 'apps/backend/*'
   - 'packages/*'
 allowBuilds:
+  '@scarf/scarf': set this to true or false
+  bcrypt: false
   unrs-resolver: true

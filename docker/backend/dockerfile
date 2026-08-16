@@ -15,14 +15,14 @@ COPY packages/shared-services ./packages/shared-services
 # Copy the app source code
 COPY apps/backend/${path_service_to_build} ./apps/backend/${path_service_to_build}
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 RUN PKG_NAME=$(node -p "require('./apps/backend/${path_service_to_build}/package.json').name") && \
     pnpm --filter "...$PKG_NAME" build
 
 # Deploy the application to a flat production-ready directory
 RUN PKG_NAME=$(node -p "require('./apps/backend/${path_service_to_build}/package.json').name") && \
-    pnpm --filter "$PKG_NAME" --prod --legacy deploy /prod
+    pnpm --filter "$PKG_NAME" --prod --legacy deploy /prod --ignore-scripts
 
 FROM node:24-alpine as runtime
 

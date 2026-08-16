@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@infrastructure/app.module';
 import { GlobalExceptionFilter } from '@infrastructure/adapters/in/http/filters/domain-exception.filter';
 import { ConfigService } from '@nestjs/config';
+import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,9 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   app.useGlobalFilters(new GlobalExceptionFilter());
+
+  setupSwagger(app);
+
   await app.listen(port);
 }
 bootstrap();

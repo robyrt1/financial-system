@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GatewayController } from '@infrastructure/adapters/in/http/controllers/gateway.controller';
+import {
+  GatewayAuthController,
+  GatewayCoreController,
+  GatewayAnalyticsController,
+} from '@infrastructure/adapters/in/http/controllers';
 import { adapterProviders } from '@infrastructure/di/adapters.providers';
 import { useCaseProviders } from '@infrastructure/di/use-cases.providers';
 import { ConfigModule } from '@nestjs/config';
@@ -11,7 +15,11 @@ import { guardProviders } from './di/guards.providers';
     ConfigModule.forRoot({ isGlobal: true }),
     HttpModule.register({ timeout: 10000 }),
   ],
-  controllers: [GatewayController],
+  controllers: [
+    GatewayAuthController,
+    GatewayCoreController,
+    GatewayAnalyticsController,
+  ],
   providers: [
     ...guardProviders,
     ...useCaseProviders,

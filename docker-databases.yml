@@ -1,5 +1,15 @@
 version: '3.9'
 
+volumes:
+  postgres_data_dev:
+  postgres_data_test:
+  postgres_data_prod:
+
+networks:
+  financial_system_backend_dev_net:
+  financial_system_backend_test_net:
+  financial_system_backend_prod_net:
+
 services:
   financial_system_database_dev:
     profiles: [ "dev" ]
@@ -17,6 +27,7 @@ services:
       - postgres_data_dev:/var/lib/postgresql/data
     networks:
       - financial_system_backend_dev_net
+    restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
       interval: 1m30s
@@ -70,12 +81,3 @@ services:
       retries: 5
       start_period: 30s
 
-volumes:
-  postgres_data_dev:
-  postgres_data_test:
-  postgres_data_prod:
-
-networks:
-  financial_system_backend_dev_net:
-  financial_system_backend_test_net:
-  financial_system_backend_prod_net:

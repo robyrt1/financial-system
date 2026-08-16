@@ -39,6 +39,7 @@ export class ForwardRequestUseCase implements RouteRequestPort {
 
     delete outboundHeaders['host'];
     delete outboundHeaders['authorization'];
+    delete outboundHeaders['content-length'];
 
     return this.proxyAdapter.forward({
       targetUrl,

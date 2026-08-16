@@ -1,4 +1,3 @@
-// apps/backend/api-gateway/src/domain/errors/gateway-errors.ts
 import { BaseDomainError } from '@financial-system/shared-errors';
 
 export class TokenExpiredOrInvalidError extends BaseDomainError {

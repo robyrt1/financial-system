@@ -4,6 +4,14 @@ networks:
   financial_system_backend_dev_net:
 
 services:
+  rabbitmq-dev:
+    profiles: [ "dev" ]
+    image: rabbitmq:3.13-management
+    container_name: financial_system_backend_rabbitmq_dev
+    ports:
+      - "5672:5672"
+    networks:
+      - financial_system_backend_dev_net
   api-gateway-dev:
     profiles: [ "dev" ]
     build:
@@ -38,13 +46,15 @@ services:
         - port=3001
     container_name: financial_system_backend_auth_dev
     ports:
-      - "${PORT:-3001}:3001"
+      - "${PORT:-4001}:3001"
     env_file:
       - ./env-files/auth/.env.development
     networks:
       - financial_system_backend_dev_net
+    depends_on:
+      - rabbitmq-dev
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      test: [ "CMD-SHELL", "curl -f http://localhost:3001/health" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
