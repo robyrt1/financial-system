@@ -23,6 +23,12 @@ importers:
 
   apps/backend/api-gateway:
     dependencies:
+      '@financial-system/shared-errors':
+        specifier: workspace:*
+        version: link:../../../packages/shared-errors
+      '@financial-system/shared-services':
+        specifier: workspace:*
+        version: link:../../../packages/shared-services
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.2.1(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(axios@1.19.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(rxjs@7.8.2)
@@ -63,12 +69,6 @@ importers:
       '@financial-system/eslint-config':
         specifier: workspace:*
         version: link:../../../packages/eslint-config
-      '@financial-system/shared-errors':
-        specifier: workspace:*
-        version: link:../../../packages/shared-errors
-      '@financial-system/shared-services':
-        specifier: workspace:*
-        version: link:../../../packages/shared-services
       '@financial-system/ts-config':
         specifier: workspace:*
         version: link:../../../packages/ts-config

@@ -1,7 +1,10 @@
 version: '3.9'
 
+networks:
+  financial_system_backend_dev_net:
+
 services:
-  api-gateway_dev:
+  api-gateway-dev:
     profiles: [ "dev" ]
     build:
       context: ./
@@ -9,104 +12,35 @@ services:
       args:
         - path_service_to_build=api-gateway
         - env=development
-        - port=3000
+        - port=${PORT:-4000}
     container_name: financial_system_backend_api_gateway_dev
     ports:
-      - "3000:3000"
+      - "${PORT:-4000}:3000"
     env_file:
-      - .env.development
+      - ./env-files/api-gateway/.env.development
     networks:
       - financial_system_backend_dev_net
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
+      test: [ "CMD-SHELL", "curl -f http://localhost:3000/health" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
 
-  auth_dev:
+  auth-dev:
     profiles: [ "dev" ]
     build:
       context: ./
       dockerfile: docker/backend/dockerfile
       args:
-        - path_service_to_build=auth
+        - path_service_to_build=auth-service
         - env=development
         - port=3001
     container_name: financial_system_backend_auth_dev
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:3001"
     env_file:
-      - .env.development
-    networks:
-      - financial_system_backend_dev_net
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-  users_dev:
-    profiles: [ "dev" ]
-    build:
-      context: ./
-      dockerfile: docker/backend/dockerfile
-      args:
-        - path_service_to_build=users
-        - env=development
-        - port=3002
-    container_name: financial_system_backend_users_dev
-    ports:
-      - "3002:3002"
-    env_file:
-      - .env.development
-    networks:
-      - financial_system_backend_dev_net
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-  transactions_dev:
-    profiles: [ "dev" ]
-    build:
-      context: ./
-      dockerfile: docker/backend/dockerfile
-      args:
-        - path_service_to_build=transactions
-        - env=development
-        - port=3003
-    container_name: financial_system_backend_transactions_dev
-    ports:
-      - "3003:3003"
-    env_file:
-      - .env.development
-    networks:
-      - financial_system_backend_dev_net
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${PORT}/health" ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-  accounts_dev:
-    profiles: [ "dev" ]
-    build:
-      context: ./
-      dockerfile: docker/backend/dockerfile
-      args:
-        - path_service_to_build=accounts
-        - env=development
-        - port=3004
-    container_name: financial_system_backend_accounts_dev
-    ports:
-      - "3004:3004"
-    env_file:
-      - .env.development
+      - ./env-files/auth/.env.development
     networks:
       - financial_system_backend_dev_net
     healthcheck:

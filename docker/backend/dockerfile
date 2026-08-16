@@ -2,36 +2,41 @@ FROM node:24-alpine as builder
 WORKDIR /app
 
 ARG path_service_to_build
-ARG env=development
-ARG port=3000
 
-COPY package.json pnpm-lock.yaml .npmrc ./pnpm-workspace.yaml ./
-COPY packages/shared-errors/package.json packages/shared-errors/tsconfig.json ./packages/shared-errors/
-COPY packages/shared-validations/package.json packages/shared-validations/tsconfig.json ./packages/shared-validations/
-COPY packages/shared-errors/src ./packages/shared-errors/src
-COPY packages/shared-validations/src ./packages/shared-validations/src
-COPY apps/backend/${path_service_to_build}/package.json apps/backend/${path_service_to_build}/tsconfig.json ./apps/backend/${path_service_to_build}/
-COPY apps/backend/${path_service_to_build}/src ./apps/backend/${path_service_to_build}/src
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+COPY packages/eslint-config ./packages/eslint-config
+COPY packages/ts-config ./packages/ts-config
+COPY packages/shared-errors ./packages/shared-errors
+COPY packages/shared-services ./packages/shared-services
+
+# Copy the app source code
+COPY apps/backend/${path_service_to_build} ./apps/backend/${path_service_to_build}
 
 RUN pnpm install --frozen-lockfile
-RUN pnpm --filter @financial-system/${path_service_to_build} build
+
+RUN PKG_NAME=$(node -p "require('./apps/backend/${path_service_to_build}/package.json').name") && \
+    pnpm --filter "...$PKG_NAME" build
+
+# Deploy the application to a flat production-ready directory
+RUN PKG_NAME=$(node -p "require('./apps/backend/${path_service_to_build}/package.json').name") && \
+    pnpm --filter "$PKG_NAME" --prod --legacy deploy /prod
 
 FROM node:24-alpine as runtime
+
+# Copy workspace packages to satisfy legacy symlink resolution
+COPY --from=builder /app/packages /packages
+
 WORKDIR /app
 
-ARG path_service_to_build
-ARG env=development
 ARG port=3000
-
-COPY package.json pnpm-lock.yaml .npmrc ./pnpm-workspace.yaml ./
-COPY packages/shared-errors/package.json ./packages/shared-errors/
-COPY packages/shared-validations/package.json ./packages/shared-validations/
-COPY apps/backend/${path_service_to_build}/package.json ./apps/backend/${path_service_to_build}/
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/backend/${path_service_to_build}/dist ./apps/backend/${path_service_to_build}/dist
-
-ENV NODE_ENV=${env}
+ENV NODE_ENV=production
 ENV PORT=${port}
+
+COPY --from=builder /prod ./
+
 EXPOSE ${port}
 
-CMD ["node", "apps/backend/${path_service_to_build}/dist/main.js"]
+CMD ["npm", "run", "start:prod"]
