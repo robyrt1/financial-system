@@ -19,3 +19,6 @@ Crie o link simbólico apontando o arquivo de desenvolvimento `.env.development`
 
 ```bash
 ln -sf .env.development .env
+
+### 2. Executar Direto
+docker compose --profile dev --env-file=.env.development -f docker-databases.yml up
