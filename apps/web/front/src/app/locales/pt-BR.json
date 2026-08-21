@@ -1,0 +1,32 @@
+{
+    "common": {
+        "loading": "Carregando...",
+        "submit": "Confirmar",
+        "email": "E-mail",
+        "password": "Senha",
+        "name": "Nome Completo"
+    },
+    "auth": {
+        "login_title": "Acessar Sistema Financeiro",
+        "register_title": "Criar Nova Conta",
+        "dont_have_account": "Não possui uma conta? Registre-se",
+        "already_have_account": "Já possui conta? Faça login"
+    },
+    "errors": {
+        "auth": {
+            "invalid_email": "O formato do e-mail '{{email}}' não é válido.",
+            "invalid_password_length": "A senha deve ter no mínimo 8 caracteres.",
+            "user_already_exists": "Já existe uma conta registrada com o e-mail '{{email}}'.",
+            "invalid_credentials": "E-mail ou senha incorretos.",
+            "direct_access_forbidden": "Acesso não autorizado."
+        },
+        "gateway": {
+            "missing_token": "Sua sessão não foi encontrada. Faça login para continuar.",
+            "token_expired_or_invalid": "Sua sessão expirou. Acesse novamente.",
+            "service_unavailable": "O serviço {{service}} está temporariamente fora do ar."
+        },
+        "system": {
+            "internal_error": "Ocorreu um erro inesperado. Tente novamente mais tarde."
+        }
+    }
+}
