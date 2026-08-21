@@ -16,7 +16,7 @@ services:
     profiles: [ "dev" ]
     build:
       context: ./
-      dockerfile: docker/backend/dockerfile
+      dockerfile: apps/backend/dockerfile
       args:
         - path_service_to_build=api-gateway
         - env=development
@@ -39,7 +39,7 @@ services:
     profiles: [ "dev" ]
     build:
       context: ./
-      dockerfile: docker/backend/dockerfile
+      dockerfile: apps/backend/dockerfile
       args:
         - path_service_to_build=auth-service
         - env=development

@@ -6,7 +6,10 @@
   },
   "scripts": {
     "lint": "eslint . --cache",
-    "lint:fix": "eslint . --fix --cache"
+    "lint:fix": "eslint . --fix --cache",
+    "infra:up": "docker compose -f docker-compose.infra.yml up -d",
+    "deps:up": "docker compose -f docker-compose.deps.yml up -d",
+    "infra:down": "docker compose -f docker-compose.infra.yml down"
   },
   "devDependencies": {
     "@financial-system/eslint-config": "workspace:*",
