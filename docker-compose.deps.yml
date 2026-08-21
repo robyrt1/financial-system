@@ -6,10 +6,12 @@ volumes:
   postgres_data_prod:
 
 networks:
-  financial_system_backend_dev_net:
-  financial_system_backend_test_net:
-  financial_system_backend_prod_net:
-
+  db-network:
+    name: financial-db-net-${NODE_ENV:-dev}
+    external: true
+  mq-network:
+    name: financial-mq-net-${NODE_ENV:-dev}
+    external: true
 services:
 
   #           DEVELOPMENT
@@ -17,11 +19,11 @@ services:
   rabbitmq-dev:
     profiles: [ "dev" ]
     image: rabbitmq:3.13-management
-    container_name: financial_system_backend_rabbitmq_dev
+    container_name: financial_system_rabbitmq_dev
     ports:
       - "5672:5672"
     networks:
-      - financial_system_backend_dev_net
+      - mq-network
     healthcheck:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
       interval: 1m30s
@@ -44,7 +46,7 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
     networks:
-      - financial_system_backend_dev_net
+      - db-network
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
@@ -61,11 +63,11 @@ services:
   rabbitmq-test:
     profiles: [ "test" ]
     image: rabbitmq:3.13-management
-    container_name: financial_system_backend_rabbitmq_test
+    container_name: financial_system_rabbitmq_test
     ports:
       - "5672:5672"
     networks:
-      - financial_system_backend_test_net
+      - mq-network
     healthcheck:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
       interval: 1m30s
@@ -88,7 +90,7 @@ services:
     volumes:
       - postgres_data_test:/var/lib/postgresql/data
     networks:
-      - financial_system_backend_test_net
+      - db-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
       interval: 1m30s
@@ -115,7 +117,7 @@ services:
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data
     networks:
-      - financial_system_backend_prod_net
+      - db-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_PORT}" ]
       interval: 1m30s
@@ -126,11 +128,11 @@ services:
   rabbitmq-prod:
     profiles: [ "prod" ]
     image: rabbitmq:3.13-management
-    container_name: financial_system_backend_rabbitmq_prod
+    container_name: financial_system_rabbitmq_prod
     ports:
       - "5672:5672"
     networks:
-      - financial_system_backend_prod_net
+      - mq-network
     healthcheck:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
       interval: 1m30s

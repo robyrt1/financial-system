@@ -1,16 +1,22 @@
-version: '3.8'
+version: '3.9'
 
+networks:
+  obs-network:
+    name: financial-obs-net-${NODE_ENV:-dev}
+    external: true
 services:
   opentelemetry-collector:
     image: otel/opentelemetry-collector-contrib:latest
     container_name: otel-collector
     command: [ "--config=/etc/otel-collector-config.yaml" ]
     volumes:
-      - ./docker/monitoring/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./docker/observability/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
       - "4317:4317" # OTLP gRPC
       - "4318:4318" # OTLP HTTP
       - "8888:8888" # Métricas do próprio Collector
+    networks:
+      - obs-network
     depends_on:
       - prometheus
       - loki
@@ -23,26 +29,30 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
       - --web.enable-remote-write-receiver
     volumes:
-      - ./docker/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/observability/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-
+    networks:
+      - obs-network
   loki:
     image: grafana/loki:latest
     container_name: loki
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
-
+    networks:
+      - obs-network
   tempo:
     image: grafana/tempo:latest
     container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
-      - ./docker/monitoring/tempo.yaml:/etc/tempo.yaml
+      - ./docker/observability/tempo.yaml:/etc/tempo.yaml
     ports:
       - "3200:3200"
       - "4317"
+    networks:
+      - obs-network
 
   grafana:
     image: grafana/grafana:latest
@@ -55,3 +65,5 @@ services:
       - prometheus
       - loki
       - tempo
+    networks:
+      - obs-network

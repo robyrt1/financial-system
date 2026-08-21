@@ -1,7 +1,15 @@
 version: '3.9'
 
 networks:
-  financial_system_backend_dev_net:
+  db-network:
+    name: financial-db-net-${NODE_ENV:-dev}
+    external: true
+  mq-network:
+    name: financial-mq-net-${NODE_ENV:-dev}
+    external: true
+  obs-network:
+    name: financial-obs-net-${NODE_ENV:-dev}
+    external: true
 
 services:
   rabbitmq-dev:
@@ -11,7 +19,7 @@ services:
     ports:
       - "5672:5672"
     networks:
-      - financial_system_backend_dev_net
+      - mq-network
   api-gateway-dev:
     profiles: [ "dev" ]
     build:
@@ -27,7 +35,9 @@ services:
     env_file:
       - ./env-files/api-gateway/.env.development
     networks:
-      - financial_system_backend_dev_net
+      - db-network
+      - mq-network
+      - obs-network
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:3000/health" ]
       interval: 1m30s
@@ -50,9 +60,9 @@ services:
     env_file:
       - ./env-files/auth/.env.development
     networks:
-      - financial_system_backend_dev_net
-    depends_on:
-      - rabbitmq-dev
+      - db-network
+      - mq-network
+      - obs-network
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:3001/health" ]
       interval: 1m30s
