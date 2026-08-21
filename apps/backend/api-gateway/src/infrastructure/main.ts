@@ -1,3 +1,4 @@
+import './otel';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@infrastructure/app.module';
 import { GlobalExceptionFilter } from '@infrastructure/adapters/in/http/filters/domain-exception.filter';

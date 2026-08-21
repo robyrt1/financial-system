@@ -61,6 +61,8 @@ services:
       - "3333:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./docker/observability/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     depends_on:
       - prometheus
       - loki
