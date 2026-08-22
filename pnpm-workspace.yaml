@@ -2,7 +2,7 @@ packages:
   - 'apps/backend/*'
   - 'packages/*'
 allowBuilds:
-  '@scarf/scarf': set this to true or false
+  '@scarf/scarf': false
   bcrypt: false
   protobufjs: true
   unrs-resolver: true

@@ -16,7 +16,7 @@
     "deps:down": "docker compose -profile dev -f docker-compose.deps.yml down",
     "test:load:k6": "k6 run scripts/k6-load-test.js",
     "test:load:autocannon": "node scripts/autocannon-load-test.js",
-    "prepare": "husky"
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production' && !process.env.CI) { require('child_process').spawnSync('husky', { stdio: 'inherit' }) }\""
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
