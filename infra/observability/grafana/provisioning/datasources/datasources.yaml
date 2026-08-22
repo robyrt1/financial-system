@@ -15,7 +15,20 @@ datasources:
           matcherRegex: "(?:trace_id|traceId)[\"=:s\\s]+([a-f0-9]+)"
           url: "$${__value.raw}"
           datasourceUid: tempo
+        - name: JaegerTraceID
+          matcherRegex: "(?:trace_id|traceId)[\"=:s\\s]+([a-f0-9]+)"
+          url: "$${__value.raw}"
+          datasourceUid: jaeger
 
+  - name: Jaeger
+    type: jaeger
+    uid: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    isDefault: false
+    version: 1
+    editable: true
+    
   - name: Prometheus
     type: prometheus
     uid: prometheus
@@ -26,6 +39,10 @@ datasources:
       exemplarTraceIdDestinations:
         - name: trace_id
           datasourceUid: tempo
+        - name: trace_id
+          datasourceUid: jaeger
+      metricsToLogsV2:
+        datasourceUid: fin-loki
     basicAuth: false
     isDefault: true
     version: 1
@@ -57,3 +74,4 @@ datasources:
         tags:
           - key: service.name
             value: exported_job
+

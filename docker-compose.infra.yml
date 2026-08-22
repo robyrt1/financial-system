@@ -77,6 +77,17 @@ services:
       - prometheus
       - loki
       - tempo
+      - jaeger
+    networks:
+      - obs-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686" # Jaeger UI
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
     networks:
       - obs-network
 

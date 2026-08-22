@@ -20,6 +20,11 @@ exporters:
     tls:
       insecure: true
 
+  otlp/jaeger:
+    endpoint: "jaeger:4317"
+    tls:
+      insecure: true
+
   debug:
     verbosity: normal
 
@@ -27,7 +32,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp/tempo, debug]
+      exporters: [otlp/tempo, otlp/jaeger, debug]
     metrics:
       receivers: [otlp]
       exporters: [prometheus, debug]
