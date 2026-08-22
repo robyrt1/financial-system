@@ -78,7 +78,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --dangerously-allow-builds
+        run: pnpm install --frozen-lockfile
 
       - name: Run Build API Gateway
         run: pnpm --filter api-gateway build
@@ -108,7 +108,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --dangerously-allow-builds
+        run: pnpm install --frozen-lockfile
 
       - name: Run Build Auth Service
         run: pnpm --filter auth-service build
