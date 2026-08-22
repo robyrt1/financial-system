@@ -44,7 +44,7 @@
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
-                        "drawStyle": "line",
+                        "drawStyle": "points",
                         "fillOpacity": 0,
                         "gradientMode": "none",
                         "hideFrom": {
@@ -55,7 +55,7 @@
                         "insertNulls": false,
                         "lineInterpolation": "linear",
                         "lineWidth": 1,
-                        "pointSize": 5,
+                        "pointSize": 10,
                         "scaleDistribution": {
                             "type": "linear"
                         },
@@ -110,7 +110,7 @@
                         "uid": "Prometheus"
                     },
                     "editorMode": "code",
-                    "expr": "avg(rate((otel_http_server_request_duration_seconds_sum * 1000){exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_route, http_request_method) /\navg(rate(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_route, http_request_method)",
+                    "expr": "(\n  avg(rate(otel_http_server_request_duration_seconds_sum{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_route, http_request_method)\n  /\n  avg(rate(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_route, http_request_method)\n) * 1000",
                     "hide": false,
                     "legendFormat": "{{exported_job}} {{http_request_method}} {{http_route}}",
                     "range": true,
@@ -138,7 +138,8 @@
                             "viz": false
                         }
                     },
-                    "mappings": []
+                    "mappings": [],
+                    "unit": "ms"
                 },
                 "overrides": []
             },
@@ -161,7 +162,7 @@
                 "pieType": "pie",
                 "reduceOptions": {
                     "calcs": [
-                        "sum"
+                        "mean"
                     ],
                     "fields": "",
                     "values": false
@@ -178,16 +179,14 @@
                         "uid": "Prometheus"
                     },
                     "editorMode": "code",
-                    "exemplar": true,
-                    "expr": "sum(rate(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval]) * $__interval_ms / 1000) by (exported_job, http_route, http_request_method)",
-                    "format": "time_series",
-                    "instant": false,
+                    "expr": "(sum by (exported_job, http_route, http_request_method) (increase(otel_http_server_request_duration_seconds_sum{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__range])) / (sum by (exported_job, http_route, http_request_method) (increase(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__range])) > 0)) * 1000",
+                    "hide": false,
                     "legendFormat": "{{exported_job}} {{http_request_method}} {{http_route}}",
                     "range": true,
                     "refId": "A"
                 }
             ],
-            "title": "Top Requests Count",
+            "title": "Top Requests Time",
             "type": "piechart"
         },
         {
@@ -249,7 +248,7 @@
                     },
                     "editorMode": "code",
                     "exemplar": true,
-                    "expr": "sum(rate((otel_http_server_request_duration_seconds_sum * 1000){exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval]) * $__interval_ms / 1000) by (exported_job, http_route, http_request_method)",
+                    "expr": "sum by (exported_job, http_route, http_request_method) (increase(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__range]))",
                     "format": "time_series",
                     "instant": false,
                     "legendFormat": "{{exported_job}} {{http_request_method}} {{http_route}}",
@@ -257,7 +256,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "Top Requests Time",
+            "title": "Top Requests Count",
             "type": "piechart"
         },
         {
@@ -764,7 +763,7 @@
                     },
                     "editorMode": "code",
                     "exemplar": true,
-                    "expr": "sum(rate((otel_http_server_request_duration_seconds_sum * 1000){exported_job=~\"${env}\",  http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval]) * $__interval_ms / 1000) by (exported_job, http_request_method, http_route)",
+                    "expr": "sum(rate(otel_http_server_request_duration_seconds_sum{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval]) * $__interval_ms) by (exported_job, http_request_method, http_route)",
                     "format": "table",
                     "hide": false,
                     "instant": false,
@@ -780,7 +779,7 @@
                     },
                     "editorMode": "code",
                     "exemplar": true,
-                    "expr": "(sum(rate((otel_http_server_request_duration_seconds_sum * 1000){exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_request_method, http_route) / sum(rate(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_request_method, http_route) >= 0) OR on() vector(0)",
+                    "expr": "((sum(rate(otel_http_server_request_duration_seconds_sum{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_request_method, http_route) / sum(rate(otel_http_server_request_duration_seconds_count{exported_job=~\"${env}\", http_route=~\"${route}\", http_request_method=~\"${http_method}\"}[$__rate_interval])) by (exported_job, http_request_method, http_route)) * 1000 >= 0) OR on() vector(0)",
                     "format": "table",
                     "hide": false,
                     "instant": false,
