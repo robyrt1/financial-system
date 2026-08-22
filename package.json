@@ -9,7 +9,7 @@
     "lint:fix": "eslint . --fix --cache",
     "back:dev": "docker compose --profile dev -f docker-compose.dev.yml up -d --build",
     "docker:networks": "bash scripts/create-networks.sh",
-    "infra:up": "docker compose -f docker-compose.infra.yml up -d --force-recreate",
+    "infra:up": "docker compose -f docker-compose.infra.yml up -d",
     "deps:up": "docker compose -f docker-compose.deps.yml up -d",
     "back:down": "docker compose -f docker-compose.dev.yml down",
     "infra:down": "docker compose -f docker-compose.infra.yml down",
