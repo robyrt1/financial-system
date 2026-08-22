@@ -1,0 +1,144 @@
+on:
+  push:
+    branches:
+      - prod
+      - dev
+      - 'release/*'
+      - 'feature/*'
+      - 'fix/*'
+      - 'chore/*'
+  pull_request:
+    branches:
+      - dev
+      - prod
+
+jobs:
+  lint-commits:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Commitlint
+        run: pnpm dlx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        
+  changes:
+    name: Check Changed Services
+    runs-on: ubuntu-latest
+    outputs:
+      api_gateway: ${{ steps.filter.outputs.api_gateway }}
+      auth_service: ${{ steps.filter.outputs.auth_service }}
+      web_front: ${{ steps.filter.outputs.web_front }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            api_gateway:
+              - 'apps/backend/api-gateway/**'
+              - 'packages/**'
+            auth_service:
+              - 'apps/backend/auth-service/**'
+              - 'packages/**'
+            web_front:
+              - 'apps/web/front/**'
+              - 'packages/**'
+
+  build_api_gateway:
+    name: Build API Gateway
+    needs: changes
+    if: ${{ needs.changes.outputs.api_gateway == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Build API Gateway
+        run: pnpm --filter api-gateway build
+        
+      - name: Alerta de falha
+        if: failure()
+        run: echo "O build do API Gateway quebrou!"
+
+  build_auth_service:
+    name: Build Auth Service
+    needs: changes
+    if: ${{ needs.changes.outputs.auth_service == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Build Auth Service
+        run: pnpm --filter auth-service build
+        
+      - name: Alerta de falha
+        if: failure()
+        run: echo "O build do Auth Service quebrou!"
+
+  build_web_front:
+    name: Build Web Front
+    needs: changes
+    if: ${{ needs.changes.outputs.web_front == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Build
+        run: pnpm --filter front build
