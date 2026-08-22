@@ -27,39 +27,13 @@
         "uid": "tempo"
       },
       "gridPos": {
-        "h": 12,
+        "h": 11,
         "w": 24,
         "x": 0,
         "y": 0
       },
       "id": 1,
-      "title": "Buscar Rastreamentos (Estilo Jaeger)",
-      "type": "traces",
-      "targets": [
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "queryType": "search",
-          "refId": "A",
-          "limit": 25
-        }
-      ]
-    },
-    {
-      "datasource": {
-        "type": "tempo",
-        "uid": "tempo"
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 12
-      },
-      "id": 2,
-      "title": "Funções Lentas (Duração > 100ms)",
+      "title": "Rastreamentos Recentes (Clique no ID do Trace para ver o Waterfall)",
       "type": "table",
       "targets": [
         {
@@ -67,7 +41,51 @@
             "type": "tempo",
             "uid": "tempo"
           },
-          "query": "{ .duration > 100ms }",
+          "query": "{ duration > 1ms }",
+          "queryType": "traceql",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "traceID": "ID do Trace",
+              "serviceName": "Serviço",
+              "duration": "Duração",
+              "startTime": "Horário de Início"
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 2,
+      "title": "Funções Lentas (Duração > 1ms)",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
+          "query": "{ duration > 1ms }",
           "queryType": "traceql",
           "refId": "A"
         }
@@ -102,9 +120,12 @@
   "refresh": "5s",
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["observability", "traces"],
+  "tags": [
+    "observability",
+    "traces"
+  ],
   "timezone": "browser",
   "title": "HTTP Traces & Spans (Jaeger-like)",
   "uid": "app-traces-tempo",
-  "version": 1
+  "version": 2
 }
