@@ -1,4 +1,4 @@
-import './otel';
+import './adapters/out/monitoring/otel';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@infrastructure/app.module';
 import { GlobalExceptionFilter } from '@infrastructure/adapters/in/http/filters/domain-exception.filter';
@@ -9,7 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
-  const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:5173');
+  const frontendUrl = configService.get<string>(
+    'FRONTEND_URL',
+    'http://localhost:5173',
+  );
 
   app.enableCors({
     origin: frontendUrl,
@@ -26,14 +29,19 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  const erros = ['uncaughtException', 'unhandledRejection', 'SIGTERM', 'SIGINT']
+  const erros = [
+    'uncaughtException',
+    'unhandledRejection',
+    'SIGTERM',
+    'SIGINT',
+  ];
 
   erros.forEach((erro) => {
     process.on(erro, async (error) => {
       console.log(erro, error);
-      await app.close()
+      await app.close();
       process.exit(1);
     });
-  })
+  });
 }
 bootstrap();
