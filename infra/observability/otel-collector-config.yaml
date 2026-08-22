@@ -2,11 +2,14 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
+        endpoint: 0.0.0.0:4318
 
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
+    send_timestamps: true
     namespace: "otel"
 
   otlphttp/loki:
@@ -17,14 +20,17 @@ exporters:
     tls:
       insecure: true
 
+  debug:
+    verbosity: normal
+
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp/tempo]
+      exporters: [otlp/tempo, debug]
     metrics:
       receivers: [otlp]
-      exporters: [prometheus]
+      exporters: [prometheus, debug]
     logs:
       receivers: [otlp]
       exporters: [otlphttp/loki]

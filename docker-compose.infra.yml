@@ -10,7 +10,7 @@ services:
     container_name: otel-collector
     command: [ "--config=/etc/otel-collector-config.yaml" ]
     volumes:
-      - ./docker/observability/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./infra/observability/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
       - "4317:4317" # OTLP gRPC
       - "4318:4318" # OTLP HTTP
@@ -28,8 +28,13 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --web.enable-remote-write-receiver
+      - --enable-feature=otlp-write-receiver
+      - --enable-feature=exemplar-storage
+      - --enable-feature=native-histograms
     volumes:
-      - ./docker/observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infra/observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /etc/localtime:/etc/localtime:ro
+      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
     networks:
@@ -47,7 +52,7 @@ services:
     container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
-      - ./docker/observability/tempo.yaml:/etc/tempo.yaml
+      - ./infra/observability/tempo.yaml:/etc/tempo.yaml
     ports:
       - "3200:3200"
       - "4317"
@@ -60,12 +65,21 @@ services:
     ports:
       - "3333:3000"
     environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app
     volumes:
-      - ./docker/observability/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./infra/observability/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - prometheus
       - loki
       - tempo
     networks:
       - obs-network
+
+volumes:
+  prometheus_data:
+  grafana_data:

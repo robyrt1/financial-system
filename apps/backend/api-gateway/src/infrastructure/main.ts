@@ -25,5 +25,15 @@ async function bootstrap() {
   setupSwagger(app);
 
   await app.listen(port);
+
+  const erros = ['uncaughtException', 'unhandledRejection', 'SIGTERM', 'SIGINT']
+
+  erros.forEach((erro) => {
+    process.on(erro, async (error) => {
+      console.log(erro, error);
+      await app.close()
+      process.exit(1);
+    });
+  })
 }
 bootstrap();

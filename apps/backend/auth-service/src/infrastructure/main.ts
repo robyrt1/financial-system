@@ -17,5 +17,15 @@ async function bootstrap() {
 
   await app.listen(port);
   console.info(`Auth Service ativo na porta: ${port}`);
+
+  const erros = ['uncaughtException', 'unhandledRejection', 'SIGTERM', 'SIGINT']
+
+  erros.forEach((erro) => {
+    process.on(erro, async (error) => {
+      console.log(erro, error);
+      await app.close()
+      process.exit(1);
+    });
+  })
 }
 bootstrap();

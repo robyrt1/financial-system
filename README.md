@@ -74,6 +74,7 @@ graph LR
 ```
 
 * **OpenTelemetry Collector (`otel-collector`):** Centraliza o recebimento de métricas, traces e logs dos microsserviços e exporta de forma otimizada para suas respectivas ferramentas de armazenamento.
+`link: https://opentelemetry.io/docs/languages/js/getting-started/nodejs/#instrumentation`
 * **Prometheus:** Raspa as métricas estruturadas expostas pelo OTel Collector no endpoint `opentelemetry-collector:8889`.
 * **Tempo & Loki:** Recebem os rastros (tracing distribuído) e logs consolidados, respectivamente.
 * **Grafana (Porta 3333):** Interface visual unificada para criação de gráficos, monitoramento de saúde do sistema e debug distribuído.
@@ -141,3 +142,24 @@ Abaixo estão os scripts globais definidos no `package.json` raiz para gerenciar
 * **`pnpm run infra:down`**: Desliga toda a infraestrutura de monitoramento.
 * **`pnpm run lint`**: Roda o linter de verificação estática do código em todo o monorepo.
 * **`pnpm run lint:fix`**: Roda o linter e corrige erros sintáticos de formatação automaticamente.
+* **`pnpm run test:load:k6`**: Executa o cenário de teste de carga simulado com `k6` (requer `k6` instalado).
+* **`pnpm run test:load:autocannon`**: Executa o teste de estresse de requisições concorrentes na rota de login via `autocannon`.
+
+---
+
+## ⚡ Testes de Carga
+
+Disponibilizamos duas ferramentas para testar o desempenho do sistema sob carga pesada, ideal para gerar volumetria e métricas nos painéis do Prometheus/Grafana:
+
+### 1. Usando Autocannon (Executado via Node.js/npx)
+Realiza um teste de estresse rápido disparando requisições concorrentes diretamente no endpoint de login:
+```bash
+pnpm run test:load:autocannon
+```
+
+### 2. Usando k6 (Fluxo de usuário realista)
+Simula um fluxo completo de ponta a ponta (registro de novos usuários com credenciais dinâmicas para evitar colisões no banco + logins consecutivos) sob concorrência e rampa de subida (requer o [k6](https://k6.io/) instalado na máquina):
+```bash
+pnpm run test:load:k6
+```
+

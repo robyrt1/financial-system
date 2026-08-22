@@ -11,14 +11,18 @@
     "docker:networks": "bash scripts/create-networks.sh",
     "infra:up": "docker compose -f docker-compose.infra.yml up -d",
     "deps:up": "docker compose -f docker-compose.deps.yml up -d",
+    "back:down": "docker compose -f docker-compose.dev.yml down",
     "infra:down": "docker compose -f docker-compose.infra.yml down",
-    "deps:down": "docker compose -profile dev -f docker-compose.deps.yml down"
+    "deps:down": "docker compose -profile dev -f docker-compose.deps.yml down",
+    "test:load:k6": "k6 run scripts/k6-load-test.js",
+    "test:load:autocannon": "node scripts/autocannon-load-test.js"
   },
   "devDependencies": {
     "@financial-system/eslint-config": "workspace:*",
     "@financial-system/shared-errors": "workspace:*",
     "@financial-system/shared-services": "workspace:*",
     "@financial-system/ts-config": "workspace:*",
+    "autocannon": "^8.0.0",
     "autoprefixer": "^10.5.4",
     "postcss": "^8.5.26",
     "tailwindcss": "^4.3.3"
