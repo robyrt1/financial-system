@@ -17,6 +17,21 @@
         "dist",
         "src"
     ],
+    "dependencies": {
+        "@opentelemetry/api": "^1.9.1",
+        "@opentelemetry/auto-instrumentations-node": "^0.79.0",
+        "@opentelemetry/exporter-metrics-otlp-http": "^0.221.0",
+        "@opentelemetry/exporter-trace-otlp-http": "^0.221.0",
+        "@opentelemetry/instrumentation": "^0.221.0",
+        "@opentelemetry/instrumentation-express": "^0.69.0",
+        "@opentelemetry/instrumentation-http": "^0.221.0",
+        "@opentelemetry/instrumentation-nestjs-core": "^0.67.0",
+        "@opentelemetry/otlp-exporter-base": "^0.221.0",
+        "@opentelemetry/resources": "^2.10.0",
+        "@opentelemetry/sdk-metrics": "^2.10.0",
+        "@opentelemetry/sdk-node": "^0.221.0",
+        "@opentelemetry/semantic-conventions": "^1.43.0"
+    },
     "devDependencies": {
         "@types/node": "^24.0.0",
         "typescript": "^5.7.3"

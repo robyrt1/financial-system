@@ -8,6 +8,7 @@ export interface RouteRequestParams {
   body?: unknown;
   query?: Record<string, unknown>;
   userId?: string;
+  userRole?: string;
 }
 
 export interface RouteResponseResult<T = unknown> {

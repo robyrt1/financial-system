@@ -9,16 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
-  const frontendUrl = configService.get<string>(
-    'FRONTEND_URL',
-    'http://localhost:5173',
-  );
 
   app.enableCors({
-    origin: frontendUrl,
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-correlation-id'],
+    allowedHeaders: '*',
   });
 
   app.enableShutdownHooks();
@@ -38,7 +34,7 @@ async function bootstrap() {
 
   erros.forEach((erro) => {
     process.on(erro, async (error) => {
-      console.log(erro, error);
+      console.error(erro, error);
       await app.close();
       process.exit(1);
     });

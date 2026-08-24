@@ -1,0 +1,45 @@
+@layer base {
+    :root {
+        /* Success: Light Mode */
+        --semantic-success-fg: var(--color-emerald-600);
+        --semantic-success-bg: var(--color-emerald-50);
+        --semantic-success-border: var(--color-emerald-200);
+
+        /* Danger / Expenses: Light Mode */
+        --semantic-danger-fg: var(--color-red-600);
+        --semantic-danger-bg: var(--color-red-50);
+        --semantic-danger-border: var(--color-red-200);
+
+        /* Warning / Pending: Light Mode */
+        --semantic-warning-fg: var(--color-amber-600);
+        --semantic-warning-bg: var(--color-amber-50);
+        --semantic-warning-border: var(--color-amber-200);
+
+        /* Info / System: Light Mode */
+        --semantic-info-fg: var(--color-cyan-600);
+        --semantic-info-bg: var(--color-cyan-50);
+        --semantic-info-border: var(--color-cyan-200);
+    }
+
+    .dark {
+        /* Success: Dark Mode */
+        --semantic-success-fg: var(--color-emerald-400);
+        --semantic-success-bg: rgba(16, 185, 129, 0.15);
+        --semantic-success-border: var(--color-emerald-700);
+
+        /* Danger / Expenses: Dark Mode */
+        --semantic-danger-fg: var(--color-red-400);
+        --semantic-danger-bg: rgba(239, 68, 68, 0.15);
+        --semantic-danger-border: var(--color-red-800);
+
+        /* Warning / Pending: Dark Mode */
+        --semantic-warning-fg: var(--color-amber-400);
+        --semantic-warning-bg: rgba(245, 158, 11, 0.15);
+        --semantic-warning-border: var(--color-amber-800);
+
+        /* Info / System: Dark Mode */
+        --semantic-info-fg: var(--color-cyan-400);
+        --semantic-info-bg: rgba(0, 209, 255, 0.15);
+        --semantic-info-border: var(--color-cyan-800);
+    }
+}

@@ -12,20 +12,31 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.enableShutdownHooks();
+  app.enableCors({
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: '*',
+  });
 
   setupSwagger(app);
 
   await app.listen(port);
   console.info(`Auth Service ativo na porta: ${port}`);
 
-  const erros = ['uncaughtException', 'unhandledRejection', 'SIGTERM', 'SIGINT']
+  const erros = [
+    'uncaughtException',
+    'unhandledRejection',
+    'SIGTERM',
+    'SIGINT',
+  ];
 
   erros.forEach((erro) => {
     process.on(erro, async (error) => {
-      console.log(erro, error);
-      await app.close()
+      console.error(erro, error);
+      await app.close();
       process.exit(1);
     });
-  })
+  });
 }
 bootstrap();

@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
+@config "../../../tailwind.config.ts";
+@import "tailwindcss";
+@import './typography.css';
+@import './color.css';
+@import './semantic.css';
+@import './sizes.css';
+
+@custom-variant dark (&:where(.dark, .dark *));

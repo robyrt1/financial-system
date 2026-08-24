@@ -4,13 +4,83 @@
         "submit": "Confirmar",
         "email": "E-mail",
         "password": "Senha",
-        "name": "Nome Completo"
+        "name": "Nome Completo",
+        "privacy_policy": "Políticas de Privacidade",
+        "terms_of_use": "Termos de Uso"
     },
     "auth": {
         "login_title": "Acessar Sistema Financeiro",
         "register_title": "Criar Nova Conta",
         "dont_have_account": "Não possui uma conta? Registre-se",
-        "already_have_account": "Já possui conta? Faça login"
+        "already_have_account": "Já possui conta? Faça login",
+        "quantum_crypto": "Quantum Cryptography",
+        "quantum_title": "Segurança quântica para sua ",
+        "quantum_title_highlight": "gestão de ativos",
+        "quantum_desc": "A RMTECH Software oferece criptografia de nível militar e monitoramento preditivo para blindar o fluxo de caixa, investimentos e dados financeiros da sua empresa contra ameaças avançadas.",
+        "e2ee_title": "E2EE",
+        "e2ee_desc": "Proteção End-to-End",
+        "zero_trust_title": "Zero Trust",
+        "zero_trust_desc": "Políticas Estritas",
+        "sys_status_nominal": "Sys-Status: Nominal",
+        "alert_success_auth": "Autenticação autorizada com sucesso! Acessando painel financeiro.",
+        "footer_copyright": "© 2026 RMTECH Software. Todos os direitos reservados. Segurança Operacional RMTECH SecOps.",
+        "footer_encrypted": "E2E Encrypted / SSL 256-bit",
+        
+        "security_header": {
+            "secure_environment": "Ambiente Seguro Oficial:",
+            "ssl_active": "SSL 256-bit Ativo",
+            "encrypted_auth": "Autenticação Criptografada"
+        },
+        "theme_toggle": {
+            "toggle_theme": "Alternar tema escuro/claro"
+        },
+        "lockout": {
+            "title": "Acesso Temporariamente Bloqueado",
+            "desc": "Múltiplas tentativas de login malsucedidas detectadas. Por segurança, este formulário foi suspenso temporariamente.",
+            "secops": "RMTECH SecOps Protection"
+        },
+        "login_form": {
+            "access_terminal": "Acesse seu Terminal",
+            "identify_validation": "Identifique-se para prosseguir com a validação",
+            "error_all_credentials": "Preencha todas as credenciais antes de continuar.",
+            "error_invalid_email": "Por favor, informe um endereço de e-mail corporativo válido.",
+            "error_invalid_credentials": "Credenciais inválidas. Verifique os dados inseridos e tente novamente.",
+            "email_label": "E-mail Corporativo",
+            "email_placeholder": "exemplo@rmtech.com",
+            "password_label": "Senha de Acesso",
+            "password_placeholder": "Digite sua credencial",
+            "hide_password": "Ocultar senha",
+            "show_password": "Exibir senha",
+            "pwd_strength": "Segurança da Senha",
+            "pwd_weak": "Senha fraca",
+            "pwd_fair": "Senha razoável",
+            "pwd_strong": "Senha forte",
+            "pwd_very_strong": "Senha altamente segura",
+            "pwd_complexity": "Complexidade da Senha",
+            "rule_min_chars": "Mín. 8 caracteres",
+            "rule_uppercase": "Letra maiúscula",
+            "rule_number": "Um número",
+            "rule_symbol": "Um símbolo",
+            "trust_device": "Registrar este dispositivo como confiável",
+            "trust_device_desc": "Permite login mais rápido nas próximas sessões de trabalho.",
+            "privacy_warning_title": "Aviso de Privacidade:",
+            "privacy_warning_desc": "Não marque a opção acima em computadores públicos ou compartilhados para evitar sequestro de sessão.",
+            "continue_mfa": "Continuar para MFA"
+        },
+        "otp_form": {
+            "back_to_login": "Voltar ao login",
+            "security_verification": "Verificação de Segurança",
+            "otp_sent": "Enviamos um código OTP de 6 dígitos para o e-mail: ",
+            "otp_label": "Código de Verificação de 6 dígitos",
+            "otp_digit_aria": "Dígito {{index}} do código de segurança",
+            "did_not_receive_otp": "Não recebeu o código?",
+            "resend_in": "Reenviar em {{seconds}}s",
+            "resend_otp": "Reenviar OTP",
+            "confirm_identity": "Confirmar Identidade",
+            "error_fill_all_digits": "Por favor, digite todos os 6 dígitos do código.",
+            "error_incorrect_otp": "Código incorreto ou expirado. Tente 123456 ou 000000 para validação.",
+            "alert_otp_resent": "Novo código OTP enviado com sucesso para o e-mail corporativo cadastrado."
+        }
     },
     "errors": {
         "auth": {

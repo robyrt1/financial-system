@@ -35,6 +35,7 @@ export class ForwardRequestUseCase implements RouteRequestPort {
       ...(dto.headers as Record<string, string | undefined>),
       'x-internal-secret': internalSecret,
       ...(dto.userId ? { 'x-user-id': dto.userId } : {}),
+      ...(dto.userRole ? { 'x-user-role': dto.userRole } : {}),
     };
 
     delete outboundHeaders['host'];

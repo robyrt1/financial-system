@@ -1,0 +1,21 @@
+
+@layer base {
+    :root {
+        --font-primary: 'Roboto', sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+    }
+
+    body {
+        font-family: var(--font-primary);
+        color: var(--color-text-body);
+        background-color: var(--color-bg-base);
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Ideal para tabelas de extrato e valores monetários não desalinharem */
+    .tabular-nums,
+    .font-mono {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+}

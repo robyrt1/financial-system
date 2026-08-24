@@ -1,0 +1,29 @@
+@layer base {
+    :root {
+        /* Layout Sizes */
+        --sidebar-width: 260px;
+        --sidebar-collapsed-width: 80px;
+        --header-height: 64px;
+        --max-content-width: 1400px;
+
+        /* Border Radii */
+        --radius-xs: 4px;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 18px;
+        --radius-xl: 24px;
+        --radius-full: 9999px;
+
+        /* Shadows (Light) */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        --shadow-glow: 0 0 12px rgba(0, 141, 181, 0.25);
+    }
+
+    .dark {
+        /* Shadows (Dark) */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 20px rgba(0, 209, 255, 0.35);
+    }
+}

@@ -8,6 +8,7 @@ export interface ForwardRequestDto {
   body?: unknown;
   query?: Record<string, unknown>;
   userId?: string;
+  userRole?: string;
 }
 
 export interface ProxyResponseDto<T = unknown> {
