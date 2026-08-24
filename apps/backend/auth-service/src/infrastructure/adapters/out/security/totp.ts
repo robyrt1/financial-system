@@ -8,10 +8,11 @@ export class Totp {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
     const clean = base32.replace(/=+$/, '').toUpperCase();
     const length = clean.length;
-    let bits = 0;
-    let value = 0;
-    let index = 0;
     const buffer = Buffer.alloc(Math.floor((length * 5) / 8));
+
+    let bufferIndex = 0;
+    let byte = 0;
+    let bits = 0;
 
     for (let i = 0; i < length; i++) {
       const char = clean[i];
@@ -20,11 +21,14 @@ export class Totp {
       if (val === -1) {
         throw new Error('Invalid base32 character');
       }
-      value = (value << 5) | val;
+
+      byte = (byte << 5) | val;
       bits += 5;
+
       if (bits >= 8) {
-        buffer[index++] = (value >> (bits - 8)) & 255;
+        buffer[bufferIndex++] = (byte >> (bits - 8)) & 0xff;
         bits -= 8;
+        byte &= (1 << bits) - 1;
       }
     }
     return buffer;

@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { AUTH_DI_TOKENS } from './tokens';
-import { InMemoryUserRepository } from '@infrastructure/adapters/out/persistence/in-memory-user.repository';
+import { TypeOrmUserRepository } from '@infrastructure/adapters/out/persistence/typeorm/typeorm-user.repository';
 import { BcryptHasherAdapter } from '@infrastructure/adapters/out/cryptography/bcrypt-hasher.adapter';
 import { JwtGeneratorAdapter } from '@infrastructure/adapters/out/jwt/jwt-generator.adapter';
 import { JwtVerifierAdapter } from '@infrastructure/adapters/out/jwt/jwt-verifier.adapter';
@@ -20,9 +20,6 @@ import { TokenGeneratorPort } from '@domain/ports/out/token-generator.port';
 import { TokenVerifierPort } from '@domain/ports/out/token-verifier.port';
 import { EventPublisherPort } from '@domain/ports/out/event-publisher.port';
 import { CacheRepositoryPort } from '@domain/ports/out/cache-repository.port';
-
-// Sharing the user repository singleton
-const userRepoInstance = new InMemoryUserRepository();
 
 export const authProviders: Provider[] = [
   {
@@ -127,7 +124,10 @@ export const authProviders: Provider[] = [
       new GetMfaStatusUseCase(userRepository),
     inject: [AUTH_DI_TOKENS.USER_REPOSITORY_PORT],
   },
-  { provide: AUTH_DI_TOKENS.USER_REPOSITORY_PORT, useValue: userRepoInstance },
+  {
+    provide: AUTH_DI_TOKENS.USER_REPOSITORY_PORT,
+    useClass: TypeOrmUserRepository,
+  },
   {
     provide: AUTH_DI_TOKENS.PASSWORD_HASHER_PORT,
     useFactory: () => new BcryptHasherAdapter(),

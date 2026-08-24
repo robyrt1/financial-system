@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Input } from "../../../components/ui/Input";
 import { Checkbox } from "../../../components/ui/Checkbox";
 import { Button } from "../../../components/ui/Button/index";
-import { ValidationRules } from "../../../components/ui/ValidationRules";
 
 const EyeIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
@@ -52,66 +51,7 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Password rules validation
-  const rules = {
-    length: password.length >= 8,
-    upper: /[A-Z]/.test(password),
-    number: /[0-9]/.test(password),
-    symbol: /[^A-Za-z0-9]/.test(password),
-  };
-
-  const getScore = () => {
-    let score = 0;
-    if (rules.length) score++;
-    if (rules.upper) score++;
-    if (rules.number) score++;
-    if (rules.symbol) score++;
-    return score;
-  };
-
-  const score = getScore();
-
-  const getStrengthUI = () => {
-    if (password.length === 0)
-      return {
-        percentage: 0,
-        text: t("auth.login_form.pwd_strength"),
-        colorClass: "text-slate-400",
-        barClass: "bg-slate-200",
-      };
-    if (score <= 1)
-      return {
-        percentage: 25,
-        text: t("auth.login_form.pwd_weak"),
-        colorClass: "text-rose-500 font-bold",
-        barClass: "bg-rose-500",
-      };
-    if (score === 2)
-      return {
-        percentage: 50,
-        text: t("auth.login_form.pwd_fair"),
-        colorClass: "text-amber-500 font-bold",
-        barClass: "bg-amber-500",
-      };
-    if (score === 3)
-      return {
-        percentage: 75,
-        text: t("auth.login_form.pwd_strong"),
-        colorClass: "text-blue-500 font-bold",
-        barClass: "bg-blue-500",
-      };
-    return {
-      percentage: 100,
-      text: t("auth.login_form.pwd_very_strong"),
-      colorClass: "text-emerald-500 font-bold",
-      barClass: "bg-emerald-500",
-    };
-  };
-
-  const strength = getStrengthUI();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -234,7 +174,7 @@ export function LoginForm({
             placeholder={t("auth.login_form.password_placeholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onFocus={() => setIsPasswordFocused(true)}
+            onFocus={() => {}}
             autoComplete="current-password"
             required
             isMono
@@ -267,40 +207,6 @@ export function LoginForm({
               />
             }
           />
-
-          {isPasswordFocused && (
-            <ValidationRules
-              rules={[
-                {
-                  id: "length",
-                  label: t("auth.login_form.rule_min_chars"),
-                  isValid: rules.length,
-                },
-                {
-                  id: "upper",
-                  label: t("auth.login_form.rule_uppercase"),
-                  isValid: rules.upper,
-                },
-                {
-                  id: "number",
-                  label: t("auth.login_form.rule_number"),
-                  isValid: rules.number,
-                },
-                {
-                  id: "symbol",
-                  label: t("auth.login_form.rule_symbol"),
-                  isValid: rules.symbol,
-                },
-              ]}
-              strength={{
-                percentage: strength.percentage,
-                label: strength.text,
-                colorClass: strength.colorClass,
-                barClass: strength.barClass,
-                subtitle: t("auth.login_form.pwd_complexity"),
-              }}
-            />
-          )}
         </div>
 
         <div className="space-y-3">

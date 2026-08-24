@@ -70,7 +70,7 @@
         "otp_form": {
             "back_to_login": "Voltar ao login",
             "security_verification": "Verificação de Segurança",
-            "otp_sent": "Enviamos um código OTP de 6 dígitos para o e-mail: ",
+            "otp_sent": "Insira o código de 6 dígitos gerado pelo seu app de autenticação para: ",
             "otp_label": "Código de Verificação de 6 dígitos",
             "otp_digit_aria": "Dígito {{index}} do código de segurança",
             "did_not_receive_otp": "Não recebeu o código?",

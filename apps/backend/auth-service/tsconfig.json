@@ -3,6 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@domain/*": [
         "./src/domain/*"
@@ -13,6 +15,12 @@
       "@infrastructure/*": [
         "./src/infrastructure/*"
       ]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
     }
   },
   "include": [

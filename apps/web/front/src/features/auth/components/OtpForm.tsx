@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import type { KeyboardEvent, ClipboardEvent, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/Button/index";
@@ -16,19 +16,7 @@ export function OtpForm({ email, mfaToken, onBack, onSuccess }: OtpFormProps) {
   const { t } = useTranslation();
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string | null>(null);
-  const [resendTimer, setResendTimer] = useState(30);
-
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
-
-  // Count down for OTP resend
-  useEffect(() => {
-    if (resendTimer > 0) {
-      const interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [resendTimer]);
 
   const handleChange = (value: string, index: number) => {
     // Strip non-numbers
@@ -107,15 +95,6 @@ export function OtpForm({ email, mfaToken, onBack, onSuccess }: OtpFormProps) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message || t("auth.otp_form.error_incorrect_otp"));
     }
-  };
-
-  const handleResend = () => {
-    if (resendTimer > 0) return;
-    setResendTimer(30);
-    setCode(Array(6).fill(""));
-    setError(null);
-    inputsRef.current[0]?.focus();
-    alert(t("auth.otp_form.alert_otp_resent"));
   };
 
   return (
@@ -203,24 +182,9 @@ export function OtpForm({ email, mfaToken, onBack, onSuccess }: OtpFormProps) {
           </div>
         </div>
 
-        <div className="flex justify-between items-center text-xs">
-          <span className="text-content-muted">
-            {t("auth.otp_form.did_not_receive_otp")}
-          </span>
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={resendTimer > 0}
-            className={`font-bold transition-all cursor-pointer focus:outline-none ${
-              resendTimer > 0
-                ? "text-slate-400 cursor-not-allowed"
-                : "text-cyan-400 hover:underline"
-            }`}
-          >
-            {resendTimer > 0
-              ? t("auth.otp_form.resend_in", { seconds: resendTimer })
-              : t("auth.otp_form.resend_otp")}
-          </button>
+        <div className="p-3 bg-cyan-500/5 border border-cyan-500/20 rounded-xl text-xs text-center text-cyan-400 font-mono">
+          Abra o seu aplicativo de autenticação (Google Authenticator, Authy,
+          etc.) para obter o código de segurança.
         </div>
 
         <Button.Root type="submit" disabled={code.some((d) => !d) || loading}>
