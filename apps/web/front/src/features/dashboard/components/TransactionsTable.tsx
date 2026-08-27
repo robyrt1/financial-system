@@ -29,21 +29,21 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     switch (status) {
       case "confirmed":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Confirmado</span>
           </span>
         );
       case "pending":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-500 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-500 border border-amber-500/20">
             <Shield className="w-3.5 h-3.5 animate-pulse" />
             <span>Pendente</span>
           </span>
         );
       case "blocked":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-500 border border-rose-500/20 animate-shake">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider bg-rose-500/10 text-rose-500 border border-rose-500/20 animate-shake">
             <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
             <span>Bloqueado</span>
           </span>
@@ -55,7 +55,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     <div className="w-full overflow-x-auto">
       <table className="w-full text-left border-collapse select-none">
         <thead>
-          <tr className="border-b border-stroke text-[10px] font-bold uppercase tracking-wider text-content-muted">
+          <tr className="border-b border-stroke text-[12px] font-bold uppercase tracking-wider text-content-muted">
             <th className="py-3.5 px-4">Transação</th>
             <th className="py-3.5 px-4">Categoria</th>
             <th className="py-3.5 px-4">Conta</th>
@@ -103,12 +103,12 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
               </td>
 
               {/* Date */}
-              <td className="py-3.5 px-4 font-mono text-[10px] text-content-muted">
+              <td className="py-3.5 px-4 font-mono text-[12px] text-content-muted">
                 {tx.date}
               </td>
 
               {/* Security Signature */}
-              <td className="py-3.5 px-4 font-mono text-[10px] text-cyan-400">
+              <td className="py-3.5 px-4 font-mono text-[12px] text-cyan-400">
                 <span className="flex items-center gap-1.5 font-bold uppercase tracking-wide">
                   <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                   <span>{tx.secureSig}</span>

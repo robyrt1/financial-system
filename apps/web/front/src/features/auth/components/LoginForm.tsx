@@ -33,7 +33,7 @@ const EyeOffIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-import { api } from "../../../app/api";
+import { api, setAccessToken } from "../../../app/api";
 
 interface LoginFormProps {
   onSuccess: (email: string, mfaToken?: string) => void;
@@ -76,10 +76,7 @@ export function LoginForm({
       if (response.data.requiresMfa) {
         onSuccess(email, response.data.mfaToken);
       } else {
-        localStorage.setItem(
-          "@financial:access_token",
-          response.data.accessToken,
-        );
+        setAccessToken(response.data.accessToken);
         localStorage.setItem(
           "@financial:refresh_token",
           response.data.refreshToken,
@@ -217,7 +214,7 @@ export function LoginForm({
             description={t("auth.login_form.trust_device_desc")}
           />
 
-          <div className="p-3 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg text-[10px] text-amber-800 dark:text-amber-300 flex items-start space-x-2">
+          <div className="p-3 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-lg text-[12px] text-amber-800 dark:text-amber-300 flex items-start space-x-2">
             <svg
               className="w-3.5 h-3.5 shrink-0 mt-0.5"
               fill="none"

@@ -18,6 +18,7 @@ export class ForwardRequestUseCase implements RouteRequestPort {
       auth: this.environment.get<string>('AUTH_SERVICE_URL'),
       'core-banking': this.environment.get<string>('CORE_BANKING_SERVICE_URL'),
       analytics: this.environment.get<string>('ANALYTICS_SERVICE_URL'),
+      financial: this.environment.get<string>('FINANCIAL_SERVICE_URL'),
     };
 
     const baseUrl = serviceUrls[dto.service];

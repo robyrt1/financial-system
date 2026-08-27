@@ -3,7 +3,7 @@ import type { KeyboardEvent, ClipboardEvent, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../components/ui/Button/index";
 
-import { api } from "../../../app/api";
+import { api, setAccessToken } from "../../../app/api";
 
 interface OtpFormProps {
   email: string;
@@ -79,10 +79,7 @@ export function OtpForm({ email, mfaToken, onBack, onSuccess }: OtpFormProps) {
       });
 
       // Save tokens
-      localStorage.setItem(
-        "@financial:access_token",
-        response.data.accessToken,
-      );
+      setAccessToken(response.data.accessToken);
       localStorage.setItem(
         "@financial:refresh_token",
         response.data.refreshToken,

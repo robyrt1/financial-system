@@ -21,7 +21,7 @@ export function ValidationRulesRoot({
               style={{ width: `${strength.percentage}%` }}
             />
           </div>
-          <div className="flex justify-between items-center text-[10px] text-slate-400">
+          <div className="flex justify-between items-center text-[12px] text-slate-400">
             <span
               className={twMerge(
                 "transition-colors duration-300",
@@ -40,7 +40,7 @@ export function ValidationRulesRoot({
       )}
 
       {rules.length > 0 && (
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px] text-slate-400 list-none p-0 m-0 mt-2">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px] text-slate-400 list-none p-0 m-0 mt-2">
           {rules.map((rule) => (
             <li key={rule.id} className="flex items-center space-x-1">
               <svg

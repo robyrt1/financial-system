@@ -17,7 +17,7 @@ export class GatewayCoreController {
     private readonly routeRequestPort: RouteRequestPort,
   ) {}
 
-  @All('*')
+  @All('*splat')
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Proxy to Core Banking microservice (requires authorization)',
@@ -26,7 +26,8 @@ export class GatewayCoreController {
     @Req() req: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    const path = req.params[0] ?? '';
+    const rawPath = req.params.splat ?? '';
+    const path = Array.isArray(rawPath) ? rawPath.join('/') : rawPath;
     const result = await this.routeRequestPort.execute({
       service: 'core-banking',
       path,

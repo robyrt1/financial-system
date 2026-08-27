@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Target, ShieldAlert, AlertTriangle, ArrowRight } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
@@ -11,12 +11,42 @@ import type { Transaction } from "./TransactionsTable";
 import { SearchModal } from "./SearchModal";
 import { NewTransactionModal } from "./NewTransactionModal";
 import type { NewTransactionData } from "./NewTransactionModal";
-import { Card } from "./Card";
+import { Card } from "../../../components/ui/Card";
 import { SettingsTab } from "./SettingsTab";
+import AccountsTab from "./AccountsTab";
+import TransactionsTab from "./TransactionsTab";
+import CategoriesTab from "../../categories/components/CategoriesTab";
+import GoalsTab from "../../goals/components/GoalsTab";
+import { useNavigate } from "react-router-dom";
+import { api, setAccessToken } from "../../../app/api";
+import DebtsTab from "../../debts/components/DebtsTab";
 
-export function DashboardScreen() {
+interface DashboardScreenProps {
+  initialTab?: string;
+}
+
+export function DashboardScreen({
+  initialTab = "dashboard",
+}: DashboardScreenProps) {
+  const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (err) {
+      console.error("Logout request failed:", err);
+    } finally {
+      localStorage.removeItem("@financial:refresh_token");
+      setAccessToken(null);
+      navigate("/");
+    }
+  };
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNewTxOpen, setIsNewTxOpen] = useState(false);
 
@@ -132,7 +162,7 @@ export function DashboardScreen() {
               <Target className="w-4.5 h-4.5 text-cyan-400" />
               <span>Metas Financeiras</span>
             </Card.Title>
-            <span className="text-[10px] font-bold text-content-muted uppercase tracking-wider font-mono">
+            <span className="text-[12px] font-bold text-content-muted uppercase tracking-wider font-mono">
               Q3 2026
             </span>
           </Card.Header>
@@ -164,7 +194,7 @@ export function DashboardScreen() {
         </div>
 
         <div className="mt-4 pt-3 flex justify-end">
-          <button className="flex items-center gap-1 text-[10px] uppercase font-bold text-cyan-400 hover:text-cyan-500 tracking-wider cursor-pointer">
+          <button className="flex items-center gap-1 text-[12px] uppercase font-bold text-cyan-400 hover:text-cyan-500 tracking-wider cursor-pointer">
             <span>Gerenciar Metas</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
@@ -180,7 +210,16 @@ export function DashboardScreen() {
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          if (tab === "dashboard") navigate("/dashboard");
+          else if (tab === "accounts") navigate("/accounts");
+          else if (tab === "transactions") navigate("/transactions");
+          else if (tab === "categories") navigate("/categories");
+          else if (tab === "debts") navigate("/debts");
+          else if (tab === "goals") navigate("/goals");
+        }}
+        onLogout={handleLogout}
       />
 
       {/* Main Container Wrapper */}
@@ -241,13 +280,13 @@ export function DashboardScreen() {
                         assinatura de chave pública e o hash correspondam aos
                         metadados do remetente.
                       </p>
-                      <p className="text-[10px] text-content-muted">
+                      <p className="text-[12px] text-content-muted">
                         Para habilitar testes de invasão ou logs adicionais de
                         API, acesse a guia de configurações do console do
                         administrador.
                       </p>
                     </Card.Content>
-                    <div className="pt-4 border-t border-amber-500/20 text-[10px] text-amber-500/80 font-mono">
+                    <div className="pt-4 border-t border-amber-500/20 text-[12px] text-amber-500/80 font-mono">
                       Security Level:{" "}
                       <strong>ENCRYPTED & HIGH-VERIFICATION</strong>
                     </div>
@@ -273,31 +312,42 @@ export function DashboardScreen() {
             </>
           )}
 
+          {activeTab === "accounts" && <AccountsTab />}
+          {activeTab === "transactions" && <TransactionsTab />}
+          {activeTab === "categories" && <CategoriesTab />}
+          {activeTab === "debts" && <DebtsTab />}
+          {activeTab === "goals" && <GoalsTab />}
           {activeTab === "settings" && <SettingsTab />}
 
-          {activeTab !== "dashboard" && activeTab !== "settings" && (
-            // Fallback content when other navigation tabs are selected
-            <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                <ShieldAlert className="w-6 h-6 animate-pulse" />
+          {activeTab !== "dashboard" &&
+            activeTab !== "settings" &&
+            activeTab !== "accounts" &&
+            activeTab !== "transactions" &&
+            activeTab !== "categories" &&
+            activeTab !== "debts" &&
+            activeTab !== "goals" && (
+              // Fallback content when other navigation tabs are selected
+              <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+                <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                  <ShieldAlert className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-content-title uppercase tracking-wide">
+                    Área Restrita
+                  </h3>
+                  <p className="text-sm text-content-muted max-w-sm mt-1">
+                    A visualização da guia "{activeTab}" está desativada no modo
+                    de demonstração.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveTab("dashboard")}
+                  className="px-4 py-2 bg-surface-card border border-stroke hover:border-cyan-400 text-content-body hover:text-cyan-400 text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                >
+                  Voltar ao Dashboard Principal
+                </button>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-content-title uppercase tracking-wide">
-                  Área Restrita
-                </h3>
-                <p className="text-sm text-content-muted max-w-sm mt-1">
-                  A visualização da guia "{activeTab}" está desativada no modo
-                  de demonstração.
-                </p>
-              </div>
-              <button
-                onClick={() => setActiveTab("dashboard")}
-                className="px-4 py-2 bg-surface-card border border-stroke hover:border-cyan-400 text-content-body hover:text-cyan-400 text-xs font-semibold rounded-xl transition-all cursor-pointer"
-              >
-                Voltar ao Dashboard Principal
-              </button>
-            </div>
-          )}
+            )}
         </main>
       </div>
 

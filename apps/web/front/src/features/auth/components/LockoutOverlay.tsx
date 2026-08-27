@@ -33,7 +33,7 @@ export function LockoutOverlay({ countdown }: LockoutOverlayProps) {
       <div className="text-cyan-400 font-mono text-3xl font-bold tracking-wider mb-6 bg-navy-950 px-6 py-3 rounded-xl border border-navy-800">
         00:{countdown < 10 ? `0${countdown}` : countdown}s
       </div>
-      <span className="text-[10px] text-slate-500 font-mono uppercase tracking-widest">
+      <span className="text-[12px] text-slate-500 font-mono uppercase tracking-widest">
         {t("auth.lockout.secops")}
       </span>
     </div>

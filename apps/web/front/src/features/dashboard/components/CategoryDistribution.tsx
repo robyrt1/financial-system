@@ -1,5 +1,5 @@
 import { PieChart, ShieldAlert, Home, TrendingUp, Car } from "lucide-react";
-import { Card } from "./Card";
+import { Card } from "../../../components/ui/Card";
 
 interface CategoryItem {
   name: string;
@@ -54,7 +54,7 @@ export function CategoryDistribution() {
             <PieChart className="w-4.5 h-4.5 text-cyan-400" />
             <span>Distribuição por Categorias</span>
           </Card.Title>
-          <span className="text-[10px] font-bold text-content-muted uppercase tracking-wider font-mono">
+          <span className="text-[12px] font-bold text-content-muted uppercase tracking-wider font-mono">
             Este Mês
           </span>
         </Card.Header>
@@ -79,7 +79,7 @@ export function CategoryDistribution() {
                     <span className="font-mono font-bold text-content-title mr-2">
                       {cat.amount}
                     </span>
-                    <span className="font-mono text-[10px] text-content-muted">
+                    <span className="font-mono text-[12px] text-content-muted">
                       ({cat.percentage}%)
                     </span>
                   </div>

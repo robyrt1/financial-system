@@ -190,10 +190,11 @@ export class GatewayAuthController {
     return res.status(result.status).json(result.data);
   }
 
-  @All('*')
+  @All('*splat')
   @ApiOperation({ summary: 'Catch-all proxy for Auth service' })
   async handleAuth(@Req() req: AuthenticatedRequest, @Res() res: Response) {
-    const path = req.params[0] ?? '';
+    const rawPath = req.params.splat ?? '';
+    const path = Array.isArray(rawPath) ? rawPath.join('/') : rawPath;
     const result = await this.routeRequestPort.execute({
       service: 'auth',
       path,

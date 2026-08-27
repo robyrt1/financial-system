@@ -45,6 +45,7 @@
     "@opentelemetry/sdk-node": "^0.221.0",
     "@opentelemetry/semantic-conventions": "^1.43.0",
     "axios": "^1.19.0",
+    "http-proxy-middleware": "^4.2.0",
     "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "reflect-metadata": "^0.2.2",

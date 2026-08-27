@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button/index";
 import { ValidationRules } from "../../../components/ui/ValidationRules";
-import { api } from "../../../app/api";
+import { api, setAccessToken } from "../../../app/api";
 
 interface RegisterFormProps {
   onBackToLogin: () => void;
@@ -62,10 +62,7 @@ export function RegisterForm({
       });
 
       // Save tokens
-      localStorage.setItem(
-        "@financial:access_token",
-        response.data.accessToken,
-      );
+      setAccessToken(response.data.accessToken);
       localStorage.setItem(
         "@financial:refresh_token",
         response.data.refreshToken,

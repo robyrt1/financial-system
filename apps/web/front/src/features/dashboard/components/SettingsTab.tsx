@@ -129,7 +129,7 @@ export function SettingsTab() {
                   alt="QR Code MFA"
                   className="w-44 h-44 rounded-lg select-none border border-stroke p-1.5 bg-white"
                 />
-                <span className="text-[10px] text-content-muted mt-3 font-mono">
+                <span className="text-[12px] text-content-muted mt-3 font-mono">
                   Scan via Google Authenticator
                 </span>
               </div>

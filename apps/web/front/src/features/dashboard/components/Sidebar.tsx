@@ -10,6 +10,7 @@ import {
   Download,
   Settings,
   ShieldCheck,
+  LogOut,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -17,12 +18,14 @@ interface SidebarProps {
   setIsCollapsed: (val: boolean) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onLogout: () => void;
 }
 
 export function Sidebar({
   isCollapsed,
   activeTab,
   setActiveTab,
+  onLogout,
 }: SidebarProps) {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -69,7 +72,7 @@ export function Sidebar({
             <ShieldCheck className="w-5 h-5 shrink-0" />
             {!isCollapsed && (
               <div className="text-left animate-fadeIn">
-                <p className="text-[10px] font-bold uppercase tracking-wider leading-none">
+                <p className="text-[12px] font-bold uppercase tracking-wider leading-none">
                   Security System
                 </p>
                 <p className="text-[9px] opacity-80 leading-none mt-1">
@@ -121,23 +124,36 @@ export function Sidebar({
       <div className="p-4 border-t border-stroke shrink-0">
         <div
           className={twMerge(
-            "flex items-center gap-3",
-            isCollapsed ? "justify-center" : "",
+            "flex items-center gap-3 justify-between",
+            isCollapsed ? "flex-col justify-center" : "",
           )}
         >
-          <div className="w-8 h-8 rounded-full bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center font-mono text-xs font-bold text-cyan-400 shrink-0">
-            RM
-          </div>
-          {!isCollapsed && (
-            <div className="text-left truncate animate-fadeIn">
-              <p className="text-xs font-bold text-content-title leading-tight">
-                Robert Mendes
-              </p>
-              <p className="text-[10px] text-content-muted leading-none mt-0.5">
-                robert@rmtech.io
-              </p>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center font-mono text-xs font-bold text-cyan-400 shrink-0">
+              RM
             </div>
-          )}
+            {!isCollapsed && (
+              <div className="text-left truncate animate-fadeIn">
+                <p className="text-xs font-bold text-content-title leading-tight">
+                  Robert Mendes
+                </p>
+                <p className="text-[12px] text-content-muted leading-none mt-0.5">
+                  robert@rmtech.io
+                </p>
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={onLogout}
+            className={twMerge(
+              "hover:bg-red-500/10 hover:text-red-400 rounded-lg text-content-muted transition-all cursor-pointer focus:outline-none shrink-0",
+              isCollapsed ? "p-2 mt-2" : "p-1.5",
+            )}
+            title="Sair do Terminal"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </aside>

@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
-import { Card } from "./Card";
+import { Card } from "../../../components/ui/Card";
 
 interface KpiItemProps {
   title: string;

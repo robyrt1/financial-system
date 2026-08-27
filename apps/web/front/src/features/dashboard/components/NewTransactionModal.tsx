@@ -122,7 +122,7 @@ export function NewTransactionModal({
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-content-muted">
+            <label className="text-[12px] font-bold uppercase tracking-wider text-content-muted">
               Descrição
             </label>
             <input
@@ -137,7 +137,7 @@ export function NewTransactionModal({
 
           {/* Value */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-content-muted">
+            <label className="text-[12px] font-bold uppercase tracking-wider text-content-muted">
               Valor (R$)
             </label>
             <input
@@ -154,7 +154,7 @@ export function NewTransactionModal({
           {/* Row: Category & Account */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-content-muted">
+              <label className="text-[12px] font-bold uppercase tracking-wider text-content-muted">
                 Categoria
               </label>
               <select
@@ -171,7 +171,7 @@ export function NewTransactionModal({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-content-muted">
+              <label className="text-[12px] font-bold uppercase tracking-wider text-content-muted">
                 Conta
               </label>
               <select
@@ -189,7 +189,7 @@ export function NewTransactionModal({
           </div>
 
           {/* Cybersecurity Audit notice */}
-          <div className="p-3 bg-cyan-400/5 border border-cyan-400/20 rounded-xl text-[10px] text-cyan-400 flex items-start gap-2 select-none">
+          <div className="p-3 bg-cyan-400/5 border border-cyan-400/20 rounded-xl text-[12px] text-cyan-400 flex items-start gap-2 select-none">
             <ShieldCheck className="w-3.5 h-3.5 mt-0.5 shrink-0" />
             <p>
               <strong>Criptografia Ativa:</strong> Esta transação receberá uma

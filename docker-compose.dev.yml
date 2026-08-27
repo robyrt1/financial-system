@@ -77,3 +77,32 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+
+  financial-dev:
+    profiles: [ "dev" ]
+    build:
+      context: ./
+      dockerfile: apps/backend/dockerfile
+      args:
+        - path_service_to_build=financial-service
+        - env=development
+        - port=3002
+    container_name: financial_system_backend_financial_dev
+    ports:
+      - "${PORT:-4002}:3002"
+    env_file:
+      - ./env-files/financial/.env.development
+    environment:
+      - OTEL_SERVICE_NAME=financial
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://opentelemetry-collector:4318/v1/metrics
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://opentelemetry-collector:4318/v1/traces
+    networks:
+      - db-network
+      - mq-network
+      - obs-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:3002/health" ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s

@@ -32,7 +32,7 @@ export function Topbar({
             <Search className="w-4 h-4" />
             <span>Pesquisar...</span>
           </div>
-          <kbd className="hidden sm:inline-block px-1.5 py-0.5 border border-stroke bg-surface-base rounded text-[10px] font-mono font-medium tracking-wide">
+          <kbd className="hidden sm:inline-block px-1.5 py-0.5 border border-stroke bg-surface-base rounded text-[12px] font-mono font-medium tracking-wide">
             ⌘K
           </kbd>
         </button>

@@ -156,7 +156,7 @@ export function SearchModal({
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-4 py-2.5 bg-surface-base border-t border-stroke text-[10px] text-content-muted flex items-center justify-between font-mono">
+        <div className="px-4 py-2.5 bg-surface-base border-t border-stroke text-[12px] text-content-muted flex items-center justify-between font-mono">
           <span>
             Use <kbd className="font-bold">↑↓</kbd> para navegar e{" "}
             <kbd className="font-bold">Enter</kbd> para selecionar

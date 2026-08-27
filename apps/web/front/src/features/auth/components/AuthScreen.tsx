@@ -90,7 +90,7 @@ export function AuthScreen() {
                 <h1 className="text-xl font-bold tracking-wider text-slate-800 dark:text-white">
                   RMTECH
                 </h1>
-                <p className="text-[10px] text-cyan-600 dark:text-cyan-400 tracking-widest uppercase font-mono">
+                <p className="text-[12px] text-cyan-600 dark:text-cyan-400 tracking-widest uppercase font-mono">
                   {t("auth.quantum_crypto")}
                 </p>
               </div>

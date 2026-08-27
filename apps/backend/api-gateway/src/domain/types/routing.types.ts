@@ -1,4 +1,5 @@
-export type TargetMicroservice = 'auth' | 'core-banking' | 'analytics';
+export type TargetMicroservice =
+  'auth' | 'core-banking' | 'analytics' | 'financial';
 
 export interface RouteRequestParams {
   service: TargetMicroservice;

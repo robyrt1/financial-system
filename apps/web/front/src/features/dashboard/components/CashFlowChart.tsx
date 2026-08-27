@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AreaChart, TrendingUp } from "lucide-react";
-import { Card } from "./Card";
+import { Card } from "../../../components/ui/Card";
 
 interface DataPoint {
   month: string;
@@ -200,7 +200,7 @@ export function CashFlowChart() {
                   x={getX(i)}
                   y={height - paddingBottom + 16}
                   textAnchor="middle"
-                  className="text-[10px] font-semibold fill-content-muted"
+                  className="text-[12px] font-semibold fill-content-muted"
                 >
                   {d.month}
                 </text>
@@ -211,7 +211,7 @@ export function CashFlowChart() {
           {/* Floating Tooltip in DOM */}
           {hoveredIdx !== null && (
             <div
-              className="absolute bg-surface-card border border-cyan-400/30 rounded-xl p-3 shadow-glow z-10 text-[10px] space-y-1 select-none pointer-events-none font-mono animate-fadeIn"
+              className="absolute bg-surface-card border border-cyan-400/30 rounded-xl p-3 shadow-glow z-10 text-[12px] space-y-1 select-none pointer-events-none font-mono animate-fadeIn"
               style={{
                 left: `${(hoveredIdx / (data.length - 1)) * 70 + 12}%`,
                 top: "10%",
