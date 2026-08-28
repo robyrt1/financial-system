@@ -171,4 +171,53 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
       totalExpenses: Number(raw?.totalExpenses || 0),
     };
   }
+
+  async getMonthlyCashFlow(
+    userId: string,
+    year: number,
+  ): Promise<{ month: string; income: number; expense: number }[]> {
+    const raw = await this.repository
+      .createQueryBuilder("t")
+      .select([
+        "TO_CHAR(t.date, 'MM') as month",
+        "SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END) as income",
+        "SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as expense",
+      ])
+      .where("t.userId = :userId", { userId })
+      .andWhere("EXTRACT(YEAR FROM t.date) = :year", { year })
+      .andWhere("t.status = 'SETTLED'")
+      .groupBy("TO_CHAR(t.date, 'MM')")
+      .orderBy("month", "ASC")
+      .getRawMany();
+
+    return raw.map((r) => ({
+      month: r.month,
+      income: Number(r.income),
+      expense: Number(r.expense),
+    }));
+  }
+
+  async getCategoryDistribution(
+    userId: string,
+    month: number,
+    year: number,
+  ): Promise<{ categoryId: string; amount: number }[]> {
+    const raw = await this.repository
+      .createQueryBuilder("t")
+      .select(["t.categoryId as categoryId", "SUM(t.amount) as amount"])
+      .where("t.userId = :userId", { userId })
+      .andWhere("EXTRACT(YEAR FROM t.date) = :year", { year })
+      .andWhere("EXTRACT(MONTH FROM t.date) = :month", { month })
+      .andWhere("t.type = 'EXPENSE'")
+      .andWhere("t.status = 'SETTLED'")
+      .andWhere("t.categoryId IS NOT NULL")
+      .groupBy("t.categoryId")
+      .orderBy("amount", "DESC")
+      .getRawMany();
+
+    return raw.map((r) => ({
+      categoryId: r.categoryid || r.categoryId,
+      amount: Number(r.amount),
+    }));
+  }
 }

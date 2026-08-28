@@ -1,33 +1,50 @@
 import { useState } from "react";
-import { X, TrendingUp, DollarSign, Wallet } from "lucide-react";
-import type { Goal } from "./GoalCard";
+import { X, ArrowRight, Wallet } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { GoalItem } from "../api/goals.api";
+
+interface Account {
+  id: string;
+  name: string;
+  balance: number;
+}
 
 interface ContributeModalProps {
   isOpen: boolean;
+  goal: GoalItem | null;
+  accounts: Account[];
   onClose: () => void;
-  onSubmit: (goalId: string, amount: number, sourceAccount: string) => void;
-  goal: Goal | null;
+  onSubmit: (goalId: string, amount: number, accountId: string) => void;
+  isPending?: boolean;
 }
 
 export function ContributeModal({
   isOpen,
+  goal,
+  accounts,
   onClose,
   onSubmit,
-  goal,
+  isPending = false,
 }: ContributeModalProps) {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState<number>(0);
-  const [sourceAccount, setSourceAccount] = useState("Banco Principal");
+  const [accountId, setAccountId] = useState<string>("");
 
   if (!isOpen || !goal) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (amount > 0) {
-      onSubmit(goal.id, amount, sourceAccount);
-    }
+    if (amount <= 0 || !accountId) return;
+    onSubmit(goal.id, amount, accountId);
     setAmount(0);
-    onClose();
+    setAccountId("");
   };
+
+  const remaining = goal.targetAmount - goal.currentAmount;
+  const suggested = Math.min(
+    goal.suggestedMonthlyDeposit || remaining,
+    remaining,
+  );
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -36,115 +53,129 @@ export function ContributeModal({
     }).format(value);
   };
 
-  const maxContribution = goal.targetAmount - goal.currentAmount;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-sm animate-fadeIn">
       <div
-        className="absolute inset-0 bg-navy-950/80 backdrop-blur-sm"
-        onClick={onClose}
+        className="absolute inset-0"
+        onClick={isPending ? undefined : onClose}
       />
 
-      <div className="relative bg-surface-card border border-stroke w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
-        <div className="flex items-center justify-between p-5 border-b border-stroke bg-surface-panel">
-          <h2 className="text-sm font-bold text-content-title uppercase tracking-wider flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-cyan-400" />
-            Aportar na Meta
-          </h2>
+      <div className="relative w-full max-w-md bg-surface-card border border-stroke rounded-2xl shadow-2xl overflow-hidden animate-slideUp">
+        <div className="px-6 py-5 border-b border-stroke flex justify-between items-center bg-surface-base">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+              <Wallet className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-content-title">
+                {t("goals.contribute_modal_title")}
+              </h3>
+              <p className="text-xs text-content-muted">{goal.name}</p>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="text-content-muted hover:text-content-body transition-colors focus:outline-none cursor-pointer"
+            disabled={isPending}
+            className="p-2 text-content-muted hover:text-content-body hover:bg-surface-panel rounded-lg transition-colors cursor-pointer disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          <div className="text-center mb-2">
-            <p className="text-sm text-content-muted">Meta Selecionada</p>
-            <p className="font-bold text-content-title text-base mt-1">
-              {goal.title}
-            </p>
-            <p className="text-xs text-content-muted font-mono mt-1">
-              Faltam {formatCurrency(maxContribution)} para concluir
-            </p>
+          <div className="bg-surface-panel border border-stroke rounded-xl p-4 flex justify-between items-center">
+            <div>
+              <span className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1">
+                Progresso Atual
+              </span>
+              <span className="font-mono font-bold text-content-title">
+                {formatCurrency(goal.currentAmount)}
+              </span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-content-muted" />
+            <div className="text-right">
+              <span className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1">
+                Após Aporte (Simulado)
+              </span>
+              <span className="font-mono font-bold text-cyan-400">
+                {formatCurrency(goal.currentAmount + (amount || 0))}
+              </span>
+            </div>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                Valor do Aporte (R$)
-              </label>
+              <div className="flex justify-between mb-2">
+                <label className="text-xs font-bold text-content-muted uppercase tracking-wider">
+                  {t("goals.contribute_modal_amount")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setAmount(suggested)}
+                  className="text-[10px] font-bold text-cyan-400 hover:text-cyan-500 uppercase tracking-wider cursor-pointer transition-colors"
+                >
+                  Usar Sugerido ({formatCurrency(suggested)})
+                </button>
+              </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <DollarSign className="w-4 h-4 text-content-muted" />
-                </div>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-content-muted text-sm font-mono">
+                  R$
+                </span>
                 <input
                   type="number"
-                  step="0.01"
                   required
-                  max={maxContribution}
+                  min="0.01"
+                  step="0.01"
+                  max={remaining}
                   value={amount || ""}
-                  onChange={(e) => setAmount(parseFloat(e.target.value))}
-                  placeholder="0.00"
-                  className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-3.5 py-2.5 text-lg font-mono text-cyan-400 font-bold focus:outline-none focus:border-cyan-500 transition-colors"
+                  onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
+                  placeholder={t("goals.contribute_modal_amount_ph")}
+                  className="w-full bg-surface-panel border border-stroke rounded-xl pl-10 pr-4 py-3 text-sm text-content-body font-mono focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:font-sans placeholder:text-content-muted/50"
                 />
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <button
-                  type="button"
-                  onClick={() => setAmount(goal.monthlySuggested || 100)}
-                  className="text-[10px] font-bold text-cyan-500 hover:text-cyan-400 uppercase cursor-pointer"
-                >
-                  Usar Sugerido
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAmount(maxContribution)}
-                  className="text-[10px] font-bold text-emerald-500 hover:text-emerald-400 uppercase cursor-pointer"
-                >
-                  Quitar Saldo Restante
-                </button>
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                Conta de Débito
+              <label className="block text-xs font-bold text-content-muted uppercase tracking-wider mb-2">
+                {t("goals.contribute_modal_account")}
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Wallet className="w-4 h-4 text-content-muted" />
-                </div>
-                <select
-                  required
-                  value={sourceAccount}
-                  onChange={(e) => setSourceAccount(e.target.value)}
-                  className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
-                >
-                  <option value="Banco Principal">Banco Principal</option>
-                  <option value="Carteira Digital">Carteira Digital</option>
-                  <option value="Corretora XP">Corretora XP</option>
-                </select>
-              </div>
+              <select
+                required
+                value={accountId}
+                onChange={(e) => setAccountId(e.target.value)}
+                className="w-full bg-surface-panel border border-stroke rounded-xl px-4 py-3 text-sm text-content-body focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all appearance-none cursor-pointer"
+              >
+                <option value="" disabled>
+                  {t("goals.contribute_modal_account_ph")}
+                </option>
+                {accounts.map((acc) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.name} ({formatCurrency(Number(acc.balance))})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-stroke mt-6">
+          <div className="pt-4 flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold text-content-muted hover:text-content-body transition-colors cursor-pointer"
+              disabled={isPending}
+              className="flex-1 px-4 py-3 bg-surface-panel hover:bg-surface-panel/80 border border-stroke text-content-title text-sm font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
-              Cancelar
+              {t("goals.btn_cancel")}
             </button>
             <button
               type="submit"
-              disabled={!amount || amount <= 0 || amount > maxContribution}
-              className="flex items-center gap-2 px-5 py-2 bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-navy-950 text-xs font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 cursor-pointer"
+              disabled={isPending || amount <= 0 || !accountId}
+              className="flex-1 px-4 py-3 bg-cyan-500 hover:bg-cyan-600 text-navy-950 flex items-center justify-center gap-2 text-sm font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 cursor-pointer disabled:opacity-50"
             >
-              <TrendingUp className="w-4 h-4" />
-              <span>Confirmar Aporte</span>
+              {isPending ? (
+                <div className="w-5 h-5 border-2 border-navy-950/20 border-t-navy-950 rounded-full animate-spin" />
+              ) : (
+                <span>{t("goals.btn_confirm_contribute")}</span>
+              )}
             </button>
           </div>
         </form>

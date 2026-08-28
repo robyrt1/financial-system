@@ -140,7 +140,7 @@ export function DebtCard({
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 p-4 bg-navy-950/30 border-t border-stroke/30">
+      <div className="flex gap-2 p-4 border-t border-stroke/30">
         <button
           onClick={() => onPayInstallment(debt.id)}
           disabled={debt.status === "PAID_OFF"}

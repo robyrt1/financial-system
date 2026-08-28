@@ -1,79 +1,61 @@
-import { useState, useEffect } from "react";
-import { X, Target, Calendar, DollarSign, Wallet } from "lucide-react";
-
-export interface NewGoalData {
-  title: string;
-  category: string;
-  targetAmount: number;
-  currentAmount: number;
-  deadline: string;
-}
+import { useState } from "react";
+import { X, Target, Save } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { CreateGoalDto } from "../api/goals.api";
 
 interface NewGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: NewGoalData) => void;
-  initialData?: NewGoalData | null;
+  onSubmit: (data: CreateGoalDto) => void;
+  isPending?: boolean;
 }
 
 export function NewGoalModal({
   isOpen,
   onClose,
   onSubmit,
-  initialData,
+  isPending = false,
 }: NewGoalModalProps) {
-  const [formData, setFormData] = useState<NewGoalData>({
-    title: "",
-    category: "Investimentos",
+  const { t } = useTranslation();
+  const [formData, setFormData] = useState<CreateGoalDto>({
+    name: "",
     targetAmount: 0,
-    currentAmount: 0,
-    deadline: new Date(new Date().setMonth(new Date().getMonth() + 12))
-      .toISOString()
-      .split("T")[0],
+    deadline: "",
+    category: "",
   });
-
-  useEffect(() => {
-    if (isOpen) {
-      if (initialData) {
-        setFormData(initialData);
-      } else {
-        setFormData({
-          title: "",
-          category: "Investimentos",
-          targetAmount: 0,
-          currentAmount: 0,
-          deadline: new Date(new Date().setMonth(new Date().getMonth() + 12))
-            .toISOString()
-            .split("T")[0],
-        });
-      }
-    }
-  }, [isOpen, initialData]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name || !formData.targetAmount || !formData.deadline) return;
     onSubmit(formData);
-    onClose();
+    setFormData({ name: "", targetAmount: 0, deadline: "", category: "" });
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-sm animate-fadeIn">
       <div
-        className="absolute inset-0 bg-navy-950/80 backdrop-blur-sm"
-        onClick={onClose}
+        className="absolute inset-0"
+        onClick={isPending ? undefined : onClose}
       />
 
-      <div className="relative bg-surface-card border border-stroke w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
-        <div className="flex items-center justify-between p-5 border-b border-stroke bg-surface-panel">
-          <h2 className="text-sm font-bold text-content-title uppercase tracking-wider flex items-center gap-2">
-            <Target className="w-4 h-4 text-cyan-400" />
-            {initialData ? "Editar Meta" : "Registrar Nova Meta"}
-          </h2>
+      <div className="relative w-full max-w-md bg-surface-card border border-stroke rounded-2xl shadow-2xl overflow-hidden animate-slideUp">
+        <div className="px-6 py-5 border-b border-stroke flex justify-between items-center bg-surface-base">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+              <Target className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-content-title">
+                {t("goals.new_modal_title")}
+              </h3>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="text-content-muted hover:text-content-body transition-colors focus:outline-none cursor-pointer"
+            disabled={isPending}
+            className="p-2 text-content-muted hover:text-content-body hover:bg-surface-panel rounded-lg transition-colors cursor-pointer disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
@@ -82,131 +64,106 @@ export function NewGoalModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                Nome da Meta
+              <label className="block text-xs font-bold text-content-muted uppercase tracking-wider mb-2">
+                {t("goals.new_modal_name")}
               </label>
               <input
                 type="text"
                 required
-                value={formData.title}
+                value={formData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
+                  setFormData({ ...formData, name: e.target.value })
                 }
-                placeholder="Ex: Reserva de Emergência, Viagem Europa"
-                className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-sm text-content-title placeholder:text-content-muted/50 focus:outline-none focus:border-cyan-500 transition-colors"
+                placeholder={t("goals.new_modal_name_ph")}
+                className="w-full bg-surface-panel border border-stroke rounded-xl px-4 py-3 text-sm text-content-body focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:text-content-muted/50"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                  Valor Alvo (R$)
+                <label className="block text-xs font-bold text-content-muted uppercase tracking-wider mb-2">
+                  {t("goals.new_modal_target")}
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <DollarSign className="w-4 h-4 text-content-muted" />
-                  </div>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-content-muted text-sm font-mono">
+                    R$
+                  </span>
                   <input
                     type="number"
-                    step="0.01"
                     required
+                    min="0.01"
+                    step="0.01"
                     value={formData.targetAmount || ""}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        targetAmount: parseFloat(e.target.value),
+                        targetAmount: parseFloat(e.target.value) || 0,
                       })
                     }
-                    placeholder="0.00"
-                    className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-3.5 py-2.5 text-sm font-mono text-content-title focus:outline-none focus:border-cyan-500 transition-colors"
+                    placeholder={t("goals.new_modal_target_ph")}
+                    className="w-full bg-surface-panel border border-stroke rounded-xl pl-10 pr-4 py-3 text-sm text-content-body font-mono focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder:font-sans placeholder:text-content-muted/50"
                   />
                 </div>
               </div>
-
               <div>
-                <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                  Valor Inicial Guardado (R$)
+                <label className="block text-xs font-bold text-content-muted uppercase tracking-wider mb-2">
+                  {t("goals.new_modal_deadline")}
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Wallet className="w-4 h-4 text-content-muted" />
-                  </div>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formData.currentAmount || ""}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        currentAmount: parseFloat(e.target.value),
-                      })
-                    }
-                    placeholder="0.00"
-                    className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-3.5 py-2.5 text-sm font-mono text-content-title focus:outline-none focus:border-cyan-500 transition-colors"
-                  />
-                </div>
+                <input
+                  type="date"
+                  required
+                  value={formData.deadline}
+                  onChange={(e) =>
+                    setFormData({ ...formData, deadline: e.target.value })
+                  }
+                  className="w-full bg-surface-panel border border-stroke rounded-xl px-4 py-3 text-sm text-content-body font-mono focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all [color-scheme:dark]"
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                  Data Limite (Deadline)
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Calendar className="w-4 h-4 text-content-muted" />
-                  </div>
-                  <input
-                    type="date"
-                    required
-                    value={formData.deadline}
-                    onChange={(e) =>
-                      setFormData({ ...formData, deadline: e.target.value })
-                    }
-                    className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-3.5 py-2.5 text-sm font-mono text-content-title focus:outline-none focus:border-cyan-500 transition-colors [color-scheme:dark]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold text-content-muted uppercase tracking-wider mb-1.5">
-                  Categoria
-                </label>
-                <select
-                  required
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
-                  }
-                  className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-sm text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
-                >
-                  <option value="Investimentos">Investimentos</option>
-                  <option value="Reserva">Reserva de Emergência</option>
-                  <option value="Viagem">Viagem</option>
-                  <option value="Aquisição">Aquisição de Bens</option>
-                  <option value="Educação">Educação</option>
-                  <option value="Outros">Outros</option>
-                </select>
-              </div>
+            <div>
+              <label className="block text-xs font-bold text-content-muted uppercase tracking-wider mb-2">
+                {t("goals.new_modal_category")}
+              </label>
+              <select
+                value={formData.category || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, category: e.target.value })
+                }
+                className="w-full bg-surface-panel border border-stroke rounded-xl px-4 py-3 text-sm text-content-body focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all appearance-none cursor-pointer"
+              >
+                <option value="">Selecione...</option>
+                <option value="Reserva">Reserva</option>
+                <option value="Aquisição">Aquisição</option>
+                <option value="Viagem">Viagem</option>
+                <option value="Investimento">Investimento</option>
+                <option value="Outros">Outros</option>
+              </select>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-stroke mt-6">
+          <div className="pt-4 flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold text-content-muted hover:text-content-body transition-colors cursor-pointer"
+              disabled={isPending}
+              className="flex-1 px-4 py-3 bg-surface-panel hover:bg-surface-panel/80 border border-stroke text-content-title text-sm font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50"
             >
-              Cancelar
+              {t("goals.btn_cancel")}
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-navy-950 text-xs font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 cursor-pointer"
+              disabled={isPending}
+              className="flex-1 px-4 py-3 bg-cyan-500 hover:bg-cyan-600 text-navy-950 flex items-center justify-center gap-2 text-sm font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 cursor-pointer disabled:opacity-50"
             >
-              <Target className="w-4 h-4" />
-              <span>{initialData ? "Atualizar Meta" : "Salvar Meta"}</span>
+              {isPending ? (
+                <div className="w-5 h-5 border-2 border-navy-950/20 border-t-navy-950 rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>{t("goals.btn_create")}</span>
+                </>
+              )}
             </button>
           </div>
         </form>

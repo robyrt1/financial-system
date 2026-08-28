@@ -17,4 +17,13 @@ export interface TransactionRepositoryPort {
     userId: string,
     query: Omit<FilterTransactionsQuery, "page" | "limit">,
   ): Promise<{ totalIncomes: number; totalExpenses: number }>;
+  getMonthlyCashFlow(
+    userId: string,
+    year: number,
+  ): Promise<{ month: string; income: number; expense: number }[]>;
+  getCategoryDistribution(
+    userId: string,
+    month: number,
+    year: number,
+  ): Promise<{ categoryId: string; amount: number }[]>;
 }

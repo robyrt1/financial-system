@@ -373,13 +373,13 @@ export default function TransactionsTab() {
           <h1 className="text-2xl font-bold text-content-title tracking-tight font-sans uppercase">
             Extrato & Gestão de Transações
           </h1>
-          <p className="text-xs text-content-muted mt-1 font-mono">
+          <p className="text-md text-content-muted mt-1 font-mono">
             Histórico consolidado, conciliação e exportação de fluxos.
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-navy-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-cyan-500/10 cursor-pointer focus:outline-none"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-navy-950 font-bold rounded-xl text-md transition-all shadow-lg shadow-cyan-500/10 cursor-pointer focus:outline-none"
         >
           <Plus className="w-4 h-4" />
           <span>Nova Transação</span>
@@ -388,7 +388,7 @@ export default function TransactionsTab() {
 
       {/* 2. KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 select-none">
-        <Card className="p-4 bg-navy-900/20 border-l-4 border-emerald-500">
+        <Card className="p-4 border-l-4 border-emerald-500">
           <p className="text-[10px] font-bold text-content-muted uppercase tracking-wider">
             Total de Entradas
           </p>
@@ -396,7 +396,7 @@ export default function TransactionsTab() {
             {formatCurrency(summary.totalIncomes)}
           </h3>
         </Card>
-        <Card className="p-4 bg-navy-900/20 border-l-4 border-rose-500">
+        <Card className="p-4 border-l-4 border-rose-500">
           <p className="text-[10px] font-bold text-content-muted uppercase tracking-wider">
             Total de Saídas
           </p>
@@ -404,7 +404,7 @@ export default function TransactionsTab() {
             {formatCurrency(summary.totalExpenses)}
           </h3>
         </Card>
-        <Card className="p-4 bg-navy-900/20 border-l-4 border-cyan-400">
+        <Card className="p-4 border-l-4 border-cyan-400">
           <p className="text-[10px] font-bold text-content-muted uppercase tracking-wider">
             Saldo Líquido
           </p>
@@ -428,7 +428,7 @@ export default function TransactionsTab() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={handleSearchKeyPress}
-              className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-4 py-2 text-xs text-content-title font-sans focus:outline-none focus:border-cyan-500"
+              className="w-full bg-surface-base border border-stroke rounded-xl pl-9 pr-4 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500"
             />
           </div>
 
@@ -440,7 +440,7 @@ export default function TransactionsTab() {
                 setType(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-xs text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
             >
               <option value="ALL">Tipos (Todos)</option>
               <option value="INCOME">Receita</option>
@@ -457,7 +457,7 @@ export default function TransactionsTab() {
                 setAccountId(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-xs text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
             >
               <option value="ALL">Contas (Todas)</option>
               {accounts.map((acc) => (
@@ -476,7 +476,7 @@ export default function TransactionsTab() {
                 setStatus(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-xs text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
             >
               <option value="ALL">Status (Todos)</option>
               <option value="SETTLED">Liquidado</option>
@@ -505,7 +505,7 @@ export default function TransactionsTab() {
         </div>
 
         {/* Date Ranges Row */}
-        <div className="mt-3 pt-3 border-t border-stroke/50 flex flex-wrap items-center gap-4 text-xs text-content-muted select-none">
+        <div className="mt-3 pt-3 border-t border-stroke/50 flex flex-wrap items-center gap-4 text-md text-content-muted select-none">
           <div className="flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5 text-cyan-400" />
             <span>Período de:</span>
@@ -516,7 +516,7 @@ export default function TransactionsTab() {
                 setStartDate(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-base border border-stroke rounded-lg px-2.5 py-1 text-xs text-content-title font-mono focus:outline-none focus:border-cyan-500"
+              className="bg-surface-base border border-stroke rounded-lg px-2.5 py-1 text-md text-content-title font-mono focus:outline-none focus:border-cyan-500"
             />
             <span>Até:</span>
             <input
@@ -526,7 +526,7 @@ export default function TransactionsTab() {
                 setEndDate(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-base border border-stroke rounded-lg px-2.5 py-1 text-xs text-content-title font-mono focus:outline-none focus:border-cyan-500"
+              className="bg-surface-base border border-stroke rounded-lg px-2.5 py-1 text-md text-content-title font-mono focus:outline-none focus:border-cyan-500"
             />
           </div>
           {(startDate || endDate) && (
@@ -546,7 +546,7 @@ export default function TransactionsTab() {
 
       {/* 4. Batch Operations Panel */}
       {selectedIds.length > 0 && (
-        <div className="p-3 bg-cyan-950/30 border border-cyan-500/30 rounded-xl flex items-center justify-between animate-fadeIn text-xs select-none">
+        <div className="p-3 bg-cyan-950/30 border border-cyan-500/30 rounded-xl flex items-center justify-between animate-fadeIn text-md select-none">
           <div className="flex items-center gap-3 text-cyan-400">
             <span className="font-bold">{selectedIds.length} selecionados</span>
             <span className="text-[10px] opacity-75 font-mono">
@@ -573,9 +573,9 @@ export default function TransactionsTab() {
       {/* 5. Main Data Table */}
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse font-sans text-xs">
+          <table className="w-full text-left border-collapse font-sans text-md">
             <thead>
-              <tr className="bg-navy-950/40 border-b border-stroke text-content-muted select-none">
+              <tr className=" border-b border-stroke text-content-muted select-none">
                 <th className="p-4 w-10">
                   <input
                     type="checkbox"
@@ -609,7 +609,7 @@ export default function TransactionsTab() {
                 <tr>
                   <td
                     colSpan={8}
-                    className="p-10 text-center text-cyan-400 font-mono text-xs"
+                    className="p-10 text-center text-cyan-400 font-mono text-md"
                   >
                     Carregando transações corporativas...
                   </td>
@@ -618,7 +618,7 @@ export default function TransactionsTab() {
                 <tr>
                   <td
                     colSpan={8}
-                    className="p-10 text-center text-content-muted font-sans text-xs"
+                    className="p-10 text-center text-content-muted font-sans text-md"
                   >
                     Nenhuma transação encontrada para os filtros selecionados.
                   </td>
@@ -701,7 +701,7 @@ export default function TransactionsTab() {
                               {t.tags.map((tag, i) => (
                                 <span
                                   key={i}
-                                  className="text-[9px] font-bold px-1.5 py-0.5 bg-navy-950/60 border border-stroke/75 text-content-muted rounded font-mono leading-none"
+                                  className="text-[11px] font-bold px-1.5 py-0.5 bg-navy-50 border border-stroke/75 text-content-muted rounded font-mono leading-none"
                                 >
                                   {tag}
                                 </span>
@@ -779,7 +779,7 @@ export default function TransactionsTab() {
         </div>
 
         {/* 6. Footer & Pagination Panel */}
-        <div className="p-4 bg-navy-950/20 border-t border-stroke flex items-center justify-between text-xs text-content-muted select-none">
+        <div className="p-4 bg-navy-50/20 border-t border-stroke flex items-center justify-between text-md text-content-muted select-none">
           <div>
             Mostrando{" "}
             <strong className="text-content-title font-mono">
@@ -828,7 +828,7 @@ export default function TransactionsTab() {
             </div>
             <form onSubmit={handleCreateTransaction} className="p-6 space-y-4">
               {/* Type Select */}
-              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="grid grid-cols-3 gap-2 text-center text-[12px]">
                 {(["EXPENSE", "INCOME", "TRANSFER"] as const).map((t) => (
                   <button
                     key={t}
@@ -862,8 +862,8 @@ export default function TransactionsTab() {
 
               {/* Payment Method Selector (Conditional on Expense) */}
               {newTx.type === "EXPENSE" && (
-                <div className="flex gap-4 items-center justify-between p-3 bg-navy-950/40 border border-stroke rounded-xl select-none">
-                  <span className="text-[10px] font-bold text-content-muted uppercase">
+                <div className="flex gap-4 items-center justify-between p-3 bg-navy-50 border border-stroke rounded-xl select-none">
+                  <span className="text-[12px] font-bold text-content-muted uppercase">
                     Forma de Liquidação
                   </span>
                   <div className="flex gap-2">
@@ -875,7 +875,7 @@ export default function TransactionsTab() {
                           paymentMethod: "ACCOUNT",
                         }))
                       }
-                      className={`px-3 py-1 rounded-lg font-semibold text-[11px] border transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg font-semibold text-[12px] border transition-all cursor-pointer ${
                         newTx.paymentMethod === "ACCOUNT"
                           ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
                           : "bg-transparent border-transparent text-content-body hover:text-content-title"
@@ -921,7 +921,7 @@ export default function TransactionsTab() {
                         description: e.target.value,
                       }))
                     }
-                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500"
                   />
                 </div>
                 <div className="col-span-1 space-y-1">
@@ -937,7 +937,7 @@ export default function TransactionsTab() {
                     onChange={(e) =>
                       setNewTx((prev) => ({ ...prev, amount: e.target.value }))
                     }
-                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title font-mono focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-md text-content-title font-mono focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
@@ -957,7 +957,7 @@ export default function TransactionsTab() {
                         categoryId: e.target.value,
                       }))
                     }
-                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
                   >
                     <option value="">Selecione uma categoria...</option>
                     {categories
@@ -997,7 +997,7 @@ export default function TransactionsTab() {
                           creditCardId: e.target.value,
                         }))
                       }
-                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
                     >
                       {cards.map((card) => (
                         <option key={card.id} value={card.id}>
@@ -1015,7 +1015,7 @@ export default function TransactionsTab() {
                           accountId: e.target.value,
                         }))
                       }
-                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
                     >
                       {accounts.map((acc) => (
                         <option key={acc.id} value={acc.id}>
@@ -1044,7 +1044,7 @@ export default function TransactionsTab() {
                           destinationAccountId: e.target.value,
                         }))
                       }
-                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
                     >
                       <option value="">Selecione...</option>
                       {accounts
@@ -1064,7 +1064,7 @@ export default function TransactionsTab() {
                           installments: parseInt(e.target.value, 10),
                         }))
                       }
-                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer font-mono"
+                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer font-mono"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => {
                         const installmentValue = newTx.amount
@@ -1087,7 +1087,7 @@ export default function TransactionsTab() {
                           status: e.target.value as any,
                         }))
                       }
-                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                      className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
                     >
                       <option value="SETTLED">Liquidado</option>
                       <option value="PENDING">Pendente</option>
@@ -1110,7 +1110,7 @@ export default function TransactionsTab() {
                     onChange={(e) =>
                       setNewTx((prev) => ({ ...prev, date: e.target.value }))
                     }
-                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title font-mono focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title font-mono focus:outline-none focus:border-cyan-500"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1124,7 +1124,7 @@ export default function TransactionsTab() {
                     onChange={(e) =>
                       setNewTx((prev) => ({ ...prev, tags: e.target.value }))
                     }
-                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-xs text-content-title focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
@@ -1134,14 +1134,14 @@ export default function TransactionsTab() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-stroke text-content-body hover:text-content-title hover:border-cyan-500/40 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 border border-stroke text-content-body hover:text-content-title hover:border-cyan-500/40 rounded-xl text-[12px] font-semibold cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={!!limitExceeded}
-                  className={`px-4 py-2 font-bold rounded-xl text-xs cursor-pointer shadow-lg transition-all ${
+                  className={`px-4 py-2 font-bold rounded-xl text-[12px] cursor-pointer shadow-lg transition-all ${
                     limitExceeded
                       ? "bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed shadow-none"
                       : "bg-cyan-500 hover:bg-cyan-600 text-navy-950 shadow-cyan-500/10"

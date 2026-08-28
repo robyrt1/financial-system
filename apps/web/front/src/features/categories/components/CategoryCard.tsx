@@ -101,12 +101,12 @@ export default function CategoryCard({
               {/* Origin Tag */}
               <div className="flex items-center gap-1.5 mt-1 select-none">
                 {category.source === "SYSTEM" ? (
-                  <span className="flex items-center gap-1 text-[12px] font-bold bg-navy-900 border border-stroke text-content-muted rounded px-1.5 py-0.5 leading-none">
+                  <span className="flex items-center gap-1 text-[12px] font-bold bg-navy-800 border border-stroke text-content-muted rounded px-1.5 py-0.5 leading-none">
                     <Lock className="w-2.5 h-2.5" />
                     <span>SISTEMA</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 text-[12px] font-bold bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 rounded px-1.5 py-0.5 leading-none">
+                  <span className="flex items-center gap-1 text-[12px] font-bold bg-cyan-600/10 border border-cyan-500/20 text-cyan-400 rounded px-1.5 py-0.5 leading-none">
                     <Unlock className="w-2.5 h-2.5" />
                     <span>PERSONALIZADA</span>
                   </span>
@@ -144,7 +144,7 @@ export default function CategoryCard({
           {category.subcategories.map((sub) => (
             <span
               key={sub.id}
-              className="group flex items-center gap-1 text-[12px] font-bold px-2 py-0.5 bg-navy-950/40 border border-stroke text-content-body hover:text-rose-400 hover:border-rose-500/30 rounded-lg font-mono transition-all select-none"
+              className="group flex items-center gap-1 text-[12px] font-bold px-2 py-0.5 bg-navy-50 border border-stroke text-content-body hover:text-rose-400 hover:border-rose-500/30 rounded-lg font-mono transition-all select-none"
             >
               <span>{sub.name}</span>
               <button
@@ -195,10 +195,10 @@ export default function CategoryCard({
       </div>
 
       {/* Card Footer Actions */}
-      <div className="px-5 py-3 border-t border-stroke/10 bg-navy-950/20 flex justify-end gap-2.5">
+      <div className="px-5 py-3 border-t border-gray-500  flex justify-end gap-2.5">
         <button
           onClick={() => onAdjustLimit(category.id)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-navy-950/60 hover:bg-navy-900 border border-stroke text-[12px] font-bold rounded-lg text-content-body hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer focus:outline-none"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-navy-50 hover:bg-navy-900 border border-stroke text-[12px] font-bold rounded-lg text-content-body hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer focus:outline-none dark:bg-gray-950 dark:border-gray-500"
         >
           <Sliders className="w-3 h-3" />
           <span>Orçamento</span>
@@ -208,7 +208,7 @@ export default function CategoryCard({
           <>
             <button
               onClick={() => onEdit(category)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-navy-950/60 hover:bg-navy-900 border border-stroke text-[12px] font-bold rounded-lg text-content-body hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer focus:outline-none"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-navy-50 hover:bg-navy-900 border border-stroke text-[12px] font-bold rounded-lg text-content-body hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer focus:outline-none dark:bg-gray-950 dark:border-gray-500"
             >
               <Edit2 className="w-3 h-3" />
               <span>Editar</span>

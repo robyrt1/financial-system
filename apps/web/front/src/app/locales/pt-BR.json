@@ -25,7 +25,6 @@
         "alert_success_auth": "Autenticação autorizada com sucesso! Acessando painel financeiro.",
         "footer_copyright": "© 2026 RMTECH Software. Todos os direitos reservados. Segurança Operacional RMTECH SecOps.",
         "footer_encrypted": "E2E Encrypted / SSL 256-bit",
-        
         "security_header": {
             "secure_environment": "Ambiente Seguro Oficial:",
             "ssl_active": "SSL 256-bit Ativo",
@@ -166,5 +165,57 @@
         "system": {
             "internal_error": "Ocorreu um erro inesperado. Tente novamente mais tarde."
         }
+    },
+    "goals": {
+        "title": "Metas Financeiras",
+        "subtitle": "Planejamento de objetivos, reservas e evolução de patrimônio.",
+        "filter_all": "Todas",
+        "filter_in_progress": "Em Andamento",
+        "filter_completed": "Concluídas",
+        "btn_new_goal": "Nova Meta",
+        "security_notice": "Objetivos segregados em vaults encriptados. Seus saldos estão sincronizados com as contas vinculadas via Zero-Knowledge Proofs.",
+        "kpi_total_accumulated": "Total Acumulado",
+        "kpi_total_target": "Meta Total Alvo",
+        "kpi_monthly_avg": "Aporte Mensal Necessário Médio",
+        "your_objectives": "Seus Objetivos",
+        "sorted_by_deadline": "Ordenado por Prazo",
+        "no_goals_found": "Nenhuma meta encontrada.",
+        "no_goals_desc": "Crie um novo objetivo para começar a planejar seu futuro.",
+        "card_current": "Atual:",
+        "card_target": "Alvo:",
+        "card_monthly": "Mensal Sugerido",
+        "btn_contribute": "Aportar",
+        "btn_redeem": "Resgatar Valor",
+        "btn_edit": "Editar",
+        "btn_delete": "Excluir Meta",
+        "new_modal_title": "Criar Nova Meta",
+        "new_modal_name": "Nome do Objetivo",
+        "new_modal_name_ph": "Ex: Reserva de Emergência",
+        "new_modal_target": "Valor Alvo (R$)",
+        "new_modal_target_ph": "Ex: 50000",
+        "new_modal_deadline": "Prazo Limite",
+        "new_modal_category": "Categoria / Tipo",
+        "btn_cancel": "Cancelar",
+        "btn_create": "Criar Meta",
+        "contribute_modal_title": "Aporte na Meta",
+        "contribute_modal_desc": "Transfira fundos para acelerar seu objetivo.",
+        "contribute_modal_amount": "Valor do Aporte (R$)",
+        "contribute_modal_amount_ph": "Ex: 1500",
+        "contribute_modal_account": "Conta de Origem",
+        "contribute_modal_account_ph": "Selecione a conta para debitar",
+        "btn_confirm_contribute": "Confirmar Aporte",
+        "redeem_modal_title": "Resgatar Meta",
+        "redeem_modal_desc": "Parabéns por atingir sua meta! Para onde deseja transferir o saldo?",
+        "redeem_modal_account": "Conta de Destino",
+        "redeem_modal_account_ph": "Selecione a conta para receber",
+        "btn_confirm_redeem": "Confirmar Resgate",
+        "delete_modal_title": "Excluir Meta",
+        "delete_modal_desc": "Tem certeza que deseja excluir esta meta? Esta ação não pode ser desfeita.",
+        "delete_modal_refund_desc": "Esta meta possui saldo. Selecione uma conta para receber o estorno.",
+        "btn_confirm_delete": "Confirmar Exclusão"
+    },
+    "transaction": {
+        "new_modal_title": "Nova Transação Corporativa",
+        "new_modal_desc": "Registre uma movimentação manual ou importe dados de arquivos CSV."
     }
 }

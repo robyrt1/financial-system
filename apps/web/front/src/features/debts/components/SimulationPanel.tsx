@@ -56,7 +56,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-navy-950/40 border-cyan-500/10 border-l border-t-0 border-r-0 border-b-0 lg:border-l-stroke lg:border-t lg:border-r lg:border-b lg:rounded-xl rounded-none relative overflow-hidden">
+    <Card className="h-full flex flex-col border-cyan-500/10 border-l border-t-0 border-r-0 border-b-0 lg:border-l-stroke lg:border-t lg:border-r lg:border-b lg:rounded-xl rounded-none relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
 
@@ -70,7 +70,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
             <RefreshCw className="w-4 h-4 text-cyan-500 animate-spin" />
           )}
         </Card.Title>
-        <p className="text-xs text-content-muted mt-1 leading-relaxed">
+        <p className="text-[12px] text-content-muted mt-1 leading-relaxed">
           Descubra quanto tempo e dinheiro você economiza ao fazer pagamentos
           extras mensais.
         </p>
@@ -79,7 +79,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
       <Card.Content className="space-y-6 flex-1 flex flex-col">
         {/* Input Control */}
         <div className="space-y-3">
-          <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-content-body">
+          <div className="flex justify-between items-center text-[12px] font-bold uppercase tracking-wider text-content-body">
             <span>Aporte Extra Mensal</span>
             <span className="font-mono text-cyan-400">
               {formatCurrency(extraPayment)}
@@ -92,7 +92,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
             step="50"
             value={extraPayment}
             onChange={(e) => setExtraPayment(Number(e.target.value))}
-            className="w-full h-2 bg-navy-900 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
+            className="w-full h-2 bg-navy-600 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
           />
           <div className="flex justify-between text-[9px] text-content-muted font-mono">
             <span>R$ 0</span>
@@ -133,7 +133,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
 
         {/* Projection Summary */}
         <div className="pt-4 border-t border-stroke/50 space-y-2">
-          <div className="flex justify-between items-center text-xs text-content-muted">
+          <div className="flex justify-between items-center text-[12px] text-content-muted">
             <span>Quitação Original:</span>
             <span className="font-mono">
               {result?.originalPayoffYears || 0} anos
@@ -145,7 +145,7 @@ export function SimulationPanel({ strategy }: SimulationPanelProps) {
               {result?.newPayoffYears || 0} anos
             </span>
           </div>
-          <div className="flex justify-between items-center text-xs text-content-muted mt-2">
+          <div className="flex justify-between items-center text-[12px] text-content-muted mt-2">
             <span>Nova Data Prevista:</span>
             <span className="font-mono">
               {result?.newPayoffDate

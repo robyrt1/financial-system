@@ -15,7 +15,10 @@ import { TransactionORMEntity } from "./adapters/out/persistence/typeorm/entitie
 import { CategoryORMEntity } from "./adapters/out/persistence/typeorm/entities/category.orm-entity";
 import { SubcategoryORMEntity } from "./adapters/out/persistence/typeorm/entities/subcategory.orm-entity";
 import { DebtORMEntity } from "./adapters/out/persistence/typeorm/entities/debt.orm-entity";
-
+import { GoalController } from "./adapters/in/http/controllers/goal.controller";
+import { goalProviders } from "./di/goal.providers";
+import { GoalORMEntity } from "./adapters/out/persistence/typeorm/entities/goal.orm-entity";
+import { GoalContributionORMEntity } from "./adapters/out/persistence/typeorm/entities/goal-contribution.orm-entity";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -37,6 +40,8 @@ import { DebtORMEntity } from "./adapters/out/persistence/typeorm/entities/debt.
           CategoryORMEntity,
           SubcategoryORMEntity,
           DebtORMEntity,
+          GoalORMEntity,
+          GoalContributionORMEntity,
         ],
         synchronize: true,
       }),
@@ -49,6 +54,8 @@ import { DebtORMEntity } from "./adapters/out/persistence/typeorm/entities/debt.
       CategoryORMEntity,
       SubcategoryORMEntity,
       DebtORMEntity,
+      GoalORMEntity,
+      GoalContributionORMEntity,
     ]),
   ],
   controllers: [
@@ -56,7 +63,14 @@ import { DebtORMEntity } from "./adapters/out/persistence/typeorm/entities/debt.
     TransactionController,
     CategoryController,
     DebtController,
+    GoalController,
+    DashboardController,
   ],
-  providers: [...financialProviders, ...categoryProviders, ...debtProviders],
+  providers: [
+    ...financialProviders,
+    ...categoryProviders,
+    ...debtProviders,
+    ...goalProviders,
+  ],
 })
 export class AppModule {}

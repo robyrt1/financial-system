@@ -59,4 +59,20 @@ export class GatewayFinancialController {
   async handleDebts(@Req() req: Request, @Res() res: Response) {
     this.httpProxyService.proxyFinancial(req, res);
   }
+
+  @All(['goals', 'goals/*'])
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Proxy all goals endpoints to Financial Service' })
+  async handleGoals(@Req() req: Request, @Res() res: Response) {
+    this.httpProxyService.proxyFinancial(req, res);
+  }
+
+  @All(['dashboard', 'dashboard/*'])
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Proxy all dashboard endpoints to Financial Service',
+  })
+  async handleDashboard(@Req() req: Request, @Res() res: Response) {
+    this.httpProxyService.proxyFinancial(req, res);
+  }
 }

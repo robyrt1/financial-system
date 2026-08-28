@@ -1,29 +1,80 @@
 @layer base {
     :root {
-        /* Layout Sizes */
-        --sidebar-width: 260px;
-        --sidebar-collapsed-width: 80px;
-        --header-height: 64px;
-        --max-content-width: 1400px;
+        /* ========================================================
+           Mobile (Padrão / Base < 768px)
+           ======================================================== */
+        --sidebar-width: 100vw;
+        /* ou 280px se for drawer overlay */
+        --sidebar-collapsed-width: 0px;
+        --header-height: 56px;
+        --max-content-width: 100%;
 
-        /* Border Radii */
-        --radius-xs: 4px;
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 18px;
-        --radius-xl: 24px;
+        /* Border Radii (Ligeiramente menores para telas compactas) */
+        --radius-xs: 3px;
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-xl: 18px;
         --radius-full: 9999px;
 
-        /* Shadows (Light) */
+        /* Shadows (Light) - Sombras mais suaves em telas menores */
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-        --shadow-glow: 0 0 12px rgba(0, 141, 181, 0.25);
+        --shadow-card: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+        --shadow-glow: 0 0 8px rgba(0, 141, 181, 0.2);
     }
 
+    /* ============================================================
+       Tablet (>= 768px e < 1024px)
+       ============================================================ */
+    @media (min-width: 768px) {
+        :root {
+            --sidebar-width: 220px;
+            --sidebar-collapsed-width: 72px;
+            --header-height: 60px;
+            --max-content-width: 720px;
+
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-card: 0 3px 5px -1px rgba(0, 0, 0, 0.06), 0 2px 3px -1px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 10px rgba(0, 141, 181, 0.22);
+        }
+    }
+
+    /* ============================================================
+       Desktop (>= 1024px)
+       ============================================================ */
+    @media (min-width: 1024px) {
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+            --header-height: 64px;
+            --max-content-width: 1400px;
+
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 12px rgba(0, 141, 181, 0.25);
+        }
+    }
+
+    /* ============================================================
+       Dark Mode (Suporte Responsivo)
+       ============================================================ */
     .dark {
-        /* Shadows (Dark) */
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-        --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-        --shadow-glow: 0 0 20px rgba(0, 209, 255, 0.35);
+        --shadow-card: 0 6px 16px -4px rgba(0, 0, 0, 0.45);
+        --shadow-glow: 0 0 14px rgba(0, 209, 255, 0.28);
+    }
+
+    @media (min-width: 1024px) {
+        .dark {
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(0, 209, 255, 0.35);
+        }
     }
 }

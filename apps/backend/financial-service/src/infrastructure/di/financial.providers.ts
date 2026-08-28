@@ -17,12 +17,14 @@ import { ManageTransactionUseCase } from "@application/use-cases/transaction/man
 import { ExportTransactionsUseCase } from "@application/use-cases/transaction/export-transactions.use-case";
 import { PayInvoiceUseCase } from "@application/use-cases/invoice/pay-invoice.use-case";
 import { TypeOrmTransactionRepository } from "../adapters/out/persistence/typeorm/repositories/typeorm-transaction.repository";
+import { GetDashboardMetricsUseCase } from "@application/use-cases/get-dashboard-metrics.use-case";
 
 import { AccountRepositoryPort } from "@domain/ports/out/account-repository.port";
 import { CreditCardRepositoryPort } from "@domain/ports/out/credit-card-repository.port";
 import { InvoiceRepositoryPort } from "@domain/ports/out/invoice-repository.port";
 import { EventPublisherPort } from "@domain/ports/out/event-publisher.port";
 import { TransactionRepositoryPort } from "@domain/ports/out/transaction-repository.port";
+import { GetAccountsSummaryPort } from "@domain/ports/in/get-accounts-summary.port";
 
 export const financialProviders: Provider[] = [
   // Repositories
@@ -171,6 +173,17 @@ export const financialProviders: Provider[] = [
       FINANCIAL_DI_TOKENS.CREDIT_CARD_REPOSITORY_PORT,
       FINANCIAL_DI_TOKENS.ACCOUNT_REPOSITORY_PORT,
       FINANCIAL_DI_TOKENS.INVOICE_REPOSITORY_PORT,
+      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
+    ],
+  },
+  {
+    provide: FINANCIAL_DI_TOKENS.GET_DASHBOARD_METRICS_PORT,
+    useFactory: (
+      accountsSummaryPort: GetAccountsSummaryPort,
+      txRepo: TransactionRepositoryPort,
+    ) => new GetDashboardMetricsUseCase(accountsSummaryPort, txRepo),
+    inject: [
+      FINANCIAL_DI_TOKENS.GET_ACCOUNTS_SUMMARY_PORT,
       FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
     ],
   },
