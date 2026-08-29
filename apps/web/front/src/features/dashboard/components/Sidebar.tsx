@@ -16,6 +16,8 @@ import {
 interface SidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (val: boolean) => void;
+  isMobileOpen: boolean;
+  setIsMobileOpen: (val: boolean) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onLogout: () => void;
@@ -23,6 +25,8 @@ interface SidebarProps {
 
 export function Sidebar({
   isCollapsed,
+  isMobileOpen,
+  setIsMobileOpen,
   activeTab,
   setActiveTab,
   onLogout,
@@ -42,8 +46,13 @@ export function Sidebar({
   return (
     <aside
       className={twMerge(
-        "bg-surface-panel border-r border-stroke h-screen fixed left-0 top-0 transition-all duration-300 z-30 flex flex-col justify-between select-none",
-        isCollapsed ? "w-20" : "w-64",
+        "bg-surface-panel border-r border-stroke h-screen fixed top-0 transition-all duration-300 z-50 flex flex-col justify-between select-none",
+        // Desktop
+        "md:left-0",
+        isCollapsed ? "md:w-20" : "md:w-64",
+        // Mobile
+        "fixed inset-y-0 left-0 -translate-x-full md:translate-x-0 w-64",
+        isMobileOpen ? "translate-x-0" : "-translate-x-full",
       )}
     >
       <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -53,33 +62,41 @@ export function Sidebar({
             <span className="font-mono text-2xl font-bold text-cyan-400 select-none shrink-0">
               {":}"}
             </span>
-            {!isCollapsed && (
-              <span className="font-bold text-lg tracking-wider text-content-title animate-fadeIn">
-                RMTECH
-              </span>
-            )}
+            <span
+              className={twMerge(
+                "font-bold text-lg tracking-wider text-content-title animate-fadeIn",
+                isCollapsed ? "md:hidden" : "inline",
+              )}
+            >
+              RMTECH
+            </span>
           </div>
         </div>
 
         {/* Security Shield Indicator */}
-        <div className={twMerge("p-4 shrink-0", isCollapsed ? "px-6" : "px-4")}>
+        <div
+          className={twMerge("p-4 shrink-0", isCollapsed ? "md:px-6" : "px-4")}
+        >
           <div
             className={twMerge(
               "flex items-center gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-500",
-              isCollapsed ? "justify-center p-2.5" : "px-3 py-2.5",
+              isCollapsed ? "md:justify-center p-2.5" : "px-3 py-2.5",
             )}
           >
             <ShieldCheck className="w-5 h-5 shrink-0" />
-            {!isCollapsed && (
-              <div className="text-left animate-fadeIn">
-                <p className="text-[12px] font-bold uppercase tracking-wider leading-none">
-                  Security System
-                </p>
-                <p className="text-[9px] opacity-80 leading-none mt-1">
-                  Status: SECURE
-                </p>
-              </div>
-            )}
+            <div
+              className={twMerge(
+                "text-left animate-fadeIn",
+                isCollapsed ? "md:hidden" : "block",
+              )}
+            >
+              <p className="text-[12px] font-bold uppercase tracking-wider leading-none">
+                Security System
+              </p>
+              <p className="text-[9px] opacity-80 leading-none mt-1">
+                Status: SECURE
+              </p>
+            </div>
           </div>
         </div>
 
@@ -92,7 +109,10 @@ export function Sidebar({
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsMobileOpen(false);
+                }}
                 className={twMerge(
                   "w-full flex items-center gap-3.5 px-3 py-3 rounded-xl text-sm font-medium transition-all group duration-200 cursor-pointer focus:outline-none",
                   isActive
@@ -109,11 +129,14 @@ export function Sidebar({
                       : "text-content-muted group-hover:text-content-title",
                   )}
                 />
-                {!isCollapsed && (
-                  <span className="truncate text-left animate-fadeIn">
-                    {item.label}
-                  </span>
-                )}
+                <span
+                  className={twMerge(
+                    "truncate text-left animate-fadeIn",
+                    isCollapsed ? "md:hidden" : "inline",
+                  )}
+                >
+                  {item.label}
+                </span>
               </button>
             );
           })}
@@ -132,23 +155,26 @@ export function Sidebar({
             <div className="w-8 h-8 rounded-full bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center font-mono text-xs font-bold text-cyan-400 shrink-0">
               RM
             </div>
-            {!isCollapsed && (
-              <div className="text-left truncate animate-fadeIn">
-                <p className="text-xs font-bold text-content-title leading-tight">
-                  Robert Mendes
-                </p>
-                <p className="text-[12px] text-content-muted leading-none mt-0.5">
-                  robert@rmtech.io
-                </p>
-              </div>
-            )}
+            <div
+              className={twMerge(
+                "text-left truncate animate-fadeIn",
+                isCollapsed ? "md:hidden" : "block",
+              )}
+            >
+              <p className="text-xs font-bold text-content-title leading-tight">
+                Robert Mendes
+              </p>
+              <p className="text-[12px] text-content-muted leading-none mt-0.5">
+                robert@rmtech.io
+              </p>
+            </div>
           </div>
 
           <button
             onClick={onLogout}
             className={twMerge(
               "hover:bg-red-500/10 hover:text-red-400 rounded-lg text-content-muted transition-all cursor-pointer focus:outline-none shrink-0",
-              isCollapsed ? "p-2 mt-2" : "p-1.5",
+              isCollapsed ? "p-2 md:mt-2" : "p-1.5",
             )}
             title="Sair do Terminal"
           >

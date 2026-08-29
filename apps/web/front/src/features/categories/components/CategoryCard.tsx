@@ -144,7 +144,7 @@ export default function CategoryCard({
           {category.subcategories.map((sub) => (
             <span
               key={sub.id}
-              className="group flex items-center gap-1 text-[12px] font-bold px-2 py-0.5 bg-navy-50 border border-stroke text-content-body hover:text-rose-400 hover:border-rose-500/30 rounded-lg font-mono transition-all select-none"
+              className="group flex items-center gap-1 text-[12px] font-bold px-2 py-0.5 bg-navy-50 border border-stroke text-content-body hover:text-rose-400 hover:border-rose-500/30 rounded-lg font-mono transition-all select-none  dark:bg-navy-950/40"
             >
               <span>{sub.name}</span>
               <button

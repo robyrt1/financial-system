@@ -13,24 +13,33 @@ export function Topbar({
   onSidebarToggle,
 }: TopbarProps) {
   return (
-    <header className="h-16 border-b border-stroke bg-surface-panel/85 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20 select-none">
-      {/* Left side: toggle and search trigger */}
-      <div className="flex items-center gap-4 flex-1 max-w-md">
+    <header className="h-16 border-b border-stroke bg-surface-panel/85 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none">
+      {/* Left side: toggle, logo (mobile) and search trigger */}
+      <div className="flex items-center gap-2 sm:gap-4 flex-1 max-w-md min-w-0">
         <button
           onClick={onSidebarToggle}
-          className="p-2 text-content-body hover:text-content-title hover:bg-surface-hover rounded-xl transition-all cursor-pointer focus:outline-none"
+          className="p-2 text-content-body hover:text-content-title hover:bg-surface-hover rounded-xl transition-all cursor-pointer focus:outline-none shrink-0"
         >
           <Menu className="w-5 h-5" />
         </button>
 
+        <div className="flex items-center gap-1.5 md:hidden select-none shrink-0 mr-1 sm:mr-2">
+          <span className="font-mono text-xl font-bold text-cyan-400">
+            {":}"}
+          </span>
+          <span className="font-bold text-[12px] sm:text-sm tracking-wider text-content-title">
+            RMTECH
+          </span>
+        </div>
+
         {/* Search trigger button */}
         <button
           onClick={onSearchClick}
-          className="w-full flex items-center justify-between px-3.5 py-2 border border-stroke bg-surface-card rounded-xl text-sm text-content-muted hover:border-cyan-400/50 hover:text-content-body transition-all duration-200 cursor-pointer focus:outline-none"
+          className="md:w-full flex items-center justify-between p-2 md:px-3.5 md:py-2 border border-stroke bg-surface-card rounded-xl text-sm text-content-muted hover:border-cyan-400/50 hover:text-content-body transition-all duration-200 cursor-pointer focus:outline-none shrink-0"
         >
           <div className="flex items-center gap-2.5">
             <Search className="w-4 h-4" />
-            <span>Pesquisar...</span>
+            <span className="hidden md:inline">Pesquisar...</span>
           </div>
           <kbd className="hidden sm:inline-block px-1.5 py-0.5 border border-stroke bg-surface-base rounded text-[12px] font-mono font-medium tracking-wide">
             ⌘K

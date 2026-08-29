@@ -167,7 +167,7 @@ export function GoalCard({
           !isRedeemed &&
           goal.suggestedMonthlyDeposit !== undefined &&
           goal.suggestedMonthlyDeposit > 0 && (
-            <div className="bg-navy-100 border border-stroke/40 rounded-lg p-2.5 mb-5 flex items-center gap-2">
+            <div className="bg-navy-100 dark:bg-navy-950/50 border border-stroke/40 rounded-lg p-2.5 mb-5 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-cyan-400" />
               <span className="text-xs text-content-body">
                 {t("goals.card_monthly")}:{" "}

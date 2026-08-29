@@ -79,7 +79,7 @@ export class GetDashboardMetricsUseCase implements GetDashboardMetricsPort {
     );
     const categoryDistribution = rawCategories.map((c) => ({
       categoryId: c.categoryId,
-      name: `Categoria ${c.categoryId.substring(0, 4)}`, // Placeholder name if we don't join category table
+      name: c.name,
       amount: c.amount,
       percentage:
         totalExpenses > 0 ? Math.round((c.amount / totalExpenses) * 100) : 0,

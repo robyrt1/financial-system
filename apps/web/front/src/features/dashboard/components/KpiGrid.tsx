@@ -67,34 +67,81 @@ function KpiCard({ title, value, change, isPositive, type }: KpiItemProps) {
   );
 }
 
-export function KpiGrid() {
+function KpiSkeleton() {
+  return (
+    <Card className="relative overflow-hidden animate-pulse">
+      <Card.Header className="mb-2">
+        <div className="h-4 bg-slate-300 dark:bg-navy-800 rounded w-2/3" />
+        <div className="w-9 h-9 rounded-xl bg-slate-300 dark:bg-navy-800 shrink-0" />
+      </Card.Header>
+      <Card.Content>
+        <div className="flex flex-col gap-1.5 mt-2">
+          <div className="h-8 bg-slate-300 dark:bg-navy-800 rounded w-1/2" />
+          <div className="h-3 bg-slate-300 dark:bg-navy-800 rounded w-1/3 mt-1.5" />
+        </div>
+      </Card.Content>
+    </Card>
+  );
+}
+
+export interface KpiData {
+  patrimony: number;
+  totalIncomes: number;
+  totalExpenses: number;
+  totalDebts: number;
+}
+
+export function KpiGrid({
+  data,
+  loading,
+}: {
+  data?: KpiData;
+  loading?: boolean;
+}) {
+  const formatCurrency = (val: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(val);
+  };
+
+  if (loading || !data) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {Array.from({ length: 4 }).map((_, idx) => (
+          <KpiSkeleton key={idx} />
+        ))}
+      </div>
+    );
+  }
+
   const kpis: KpiItemProps[] = [
     {
       title: "Patrimônio Líquido",
-      value: "R$ 142.384,50",
-      change: "+4,2%",
+      value: formatCurrency(data.patrimony),
+      change: "+0,0%",
       isPositive: true,
       type: "patrimony",
     },
     {
       title: "Receitas Totais",
-      value: "R$ 18.420,00",
-      change: "+12,4%",
+      value: formatCurrency(data.totalIncomes),
+      change: "+0,0%",
       isPositive: true,
       type: "income",
     },
     {
       title: "Despesas Consolidadas",
-      value: "R$ 9.150,20",
-      change: "-2,1%",
-      isPositive: true, // Decreasing expenses is positive
+      value: formatCurrency(data.totalExpenses),
+      change: "-0,0%",
+      isPositive: true,
       type: "expense",
     },
     {
       title: "Dívidas & Obrigações",
-      value: "R$ 3.840,10",
-      change: "-15,4%",
-      isPositive: true, // Decreasing debt is positive
+      value: formatCurrency(data.totalDebts),
+      change: "-0,0%",
+      isPositive: true,
       type: "debt",
     },
   ];

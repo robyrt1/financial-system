@@ -8,17 +8,73 @@ interface DataPoint {
   expense: number;
 }
 
-export function CashFlowChart() {
+function ChartSkeleton() {
+  return (
+    <Card className="flex flex-col justify-between h-full animate-pulse p-6">
+      <div className="h-6 bg-slate-300 dark:bg-navy-800 rounded w-1/3 mb-4" />
+      <div className="flex-grow flex items-end gap-4 h-[160px] border-b border-l border-stroke/20 pb-2 pl-2 mt-4">
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-1/3" />
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-1/2" />
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-2/3" />
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-1/3" />
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-4/5" />
+        <div className="flex-1 bg-slate-200 dark:bg-navy-800/40 rounded-t h-3/5" />
+      </div>
+      <div className="h-4 bg-slate-300 dark:bg-navy-800 rounded w-1/4 mt-4" />
+    </Card>
+  );
+}
+
+export function CashFlowChart({
+  chartData,
+  loading,
+}: {
+  chartData?: DataPoint[];
+  loading?: boolean;
+}) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  const data: DataPoint[] = [
-    { month: "Jan", income: 12000, expense: 7500 },
-    { month: "Fev", income: 15000, expense: 8200 },
-    { month: "Mar", income: 14000, expense: 8900 },
-    { month: "Abr", income: 16000, expense: 8500 },
-    { month: "Mai", income: 17500, expense: 9200 },
-    { month: "Jun", income: 18420, expense: 9150 },
-  ];
+  if (loading || !chartData) {
+    return <ChartSkeleton />;
+  }
+
+  if (chartData.length === 0) {
+    return (
+      <Card className="flex flex-col justify-between h-full p-6 min-h-[300px]">
+        <Card.Header className="mb-4">
+          <Card.Title className="flex items-center gap-2">
+            <AreaChart className="w-4.5 h-4.5 text-cyan-400" />
+            <span>Fluxo de Caixa Mensal</span>
+          </Card.Title>
+        </Card.Header>
+        <Card.Content className="flex-grow flex items-center justify-center text-content-muted font-sans text-sm">
+          Nenhum dado de fluxo de caixa disponível.
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  let data = chartData;
+  if (data.length === 1) {
+    const months = [
+      "Jan",
+      "Fev",
+      "Mar",
+      "Abr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Set",
+      "Out",
+      "Nov",
+      "Dez",
+    ];
+    const currentMonthIdx = months.indexOf(data[0].month);
+    const prevMonthName =
+      currentMonthIdx > 0 ? months[currentMonthIdx - 1] : "Ant";
+    data = [{ month: prevMonthName, income: 0, expense: 0 }, data[0]];
+  }
 
   // SVG Chart Dimensions
   const width = 500;
@@ -31,7 +87,8 @@ export function CashFlowChart() {
   const chartWidth = width - paddingLeft - paddingRight;
   const chartHeight = height - paddingTop - paddingBottom;
 
-  const maxVal = 20000;
+  const maxVal =
+    Math.max(...data.map((d) => Math.max(d.income, d.expense)), 1000) * 1.1;
 
   // Helpers to get X/Y coords
   const getX = (index: number) => {

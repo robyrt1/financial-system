@@ -179,14 +179,14 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     const raw = await this.repository
       .createQueryBuilder("t")
       .select([
-        "TO_CHAR(t.date, 'MM') as month",
+        "TO_CHAR(CAST(t.date AS DATE), 'MM') as month",
         "SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END) as income",
         "SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as expense",
       ])
       .where("t.userId = :userId", { userId })
-      .andWhere("EXTRACT(YEAR FROM t.date) = :year", { year })
+      .andWhere("EXTRACT(YEAR FROM CAST(t.date AS DATE)) = :year", { year })
       .andWhere("t.status = 'SETTLED'")
-      .groupBy("TO_CHAR(t.date, 'MM')")
+      .groupBy("TO_CHAR(CAST(t.date AS DATE), 'MM')")
       .orderBy("month", "ASC")
       .getRawMany();
 
@@ -201,22 +201,28 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     userId: string,
     month: number,
     year: number,
-  ): Promise<{ categoryId: string; amount: number }[]> {
+  ): Promise<{ categoryId: string; name: string; amount: number }[]> {
     const raw = await this.repository
       .createQueryBuilder("t")
-      .select(["t.categoryId as categoryId", "SUM(t.amount) as amount"])
+      .select([
+        "t.categoryId as categoryId",
+        "c.name as name",
+        "SUM(t.amount) as amount",
+      ])
+      .innerJoin("categories", "c", "c.id = t.categoryId")
       .where("t.userId = :userId", { userId })
-      .andWhere("EXTRACT(YEAR FROM t.date) = :year", { year })
-      .andWhere("EXTRACT(MONTH FROM t.date) = :month", { month })
+      .andWhere("EXTRACT(YEAR FROM CAST(t.date AS DATE)) = :year", { year })
+      .andWhere("EXTRACT(MONTH FROM CAST(t.date AS DATE)) = :month", { month })
       .andWhere("t.type = 'EXPENSE'")
       .andWhere("t.status = 'SETTLED'")
-      .andWhere("t.categoryId IS NOT NULL")
       .groupBy("t.categoryId")
+      .addGroupBy("c.name")
       .orderBy("amount", "DESC")
       .getRawMany();
 
     return raw.map((r) => ({
       categoryId: r.categoryid || r.categoryId,
+      name: r.name || r.categoryname || "",
       amount: Number(r.amount),
     }));
   }

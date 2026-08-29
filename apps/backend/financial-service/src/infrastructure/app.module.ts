@@ -19,6 +19,7 @@ import { GoalController } from "./adapters/in/http/controllers/goal.controller";
 import { goalProviders } from "./di/goal.providers";
 import { GoalORMEntity } from "./adapters/out/persistence/typeorm/entities/goal.orm-entity";
 import { GoalContributionORMEntity } from "./adapters/out/persistence/typeorm/entities/goal-contribution.orm-entity";
+import { DashboardController } from "./adapters/in/http/controllers/dashboard.controller";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

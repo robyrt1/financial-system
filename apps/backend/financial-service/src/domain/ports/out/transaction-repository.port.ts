@@ -25,5 +25,5 @@ export interface TransactionRepositoryPort {
     userId: string,
     month: number,
     year: number,
-  ): Promise<{ categoryId: string; amount: number }[]>;
+  ): Promise<{ categoryId: string; name: string; amount: number }[]>;
 }
