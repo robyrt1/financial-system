@@ -6,6 +6,7 @@ import { Transaction } from "@domain/entities/transaction.entity";
 import { FilterTransactionsQuery } from "@domain/ports/in/list-transactions.port";
 import { TransactionORMEntity } from "../entities/transaction.orm-entity";
 import { TransactionMapper } from "../mappers/transaction.mapper";
+import { TypeOrmUnitOfWorkAdapter } from "../../typeorm-unit-of-work.adapter";
 
 @Injectable()
 export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
@@ -14,23 +15,32 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     private readonly repository: Repository<TransactionORMEntity>,
   ) {}
 
-  async findById(id: string): Promise<Transaction | null> {
-    const orm = await this.repository.findOne({ where: { id } });
+  private getRepository(entityManager?: any): Repository<TransactionORMEntity> {
+    const manager = entityManager || TypeOrmUnitOfWorkAdapter.getStoreManager();
+    return manager
+      ? manager.getRepository(TransactionORMEntity)
+      : this.repository;
+  }
+
+  async findById(id: string, entityManager?: any): Promise<Transaction | null> {
+    const orm = await this.getRepository(entityManager).findOne({
+      where: { id },
+      relations: {
+        category: true,
+        subcategory: true,
+      },
+    });
     return orm ? TransactionMapper.toDomain(orm) : null;
   }
 
   async save(transaction: Transaction, entityManager?: any): Promise<void> {
-    const repo = entityManager
-      ? entityManager.getRepository(TransactionORMEntity)
-      : this.repository;
+    const repo = this.getRepository(entityManager);
     const orm = TransactionMapper.toORM(transaction);
     await repo.save(orm);
   }
 
   async delete(id: string, entityManager?: any): Promise<void> {
-    const repo = entityManager
-      ? entityManager.getRepository(TransactionORMEntity)
-      : this.repository;
+    const repo = this.getRepository(entityManager);
     await repo.delete(id);
   }
 
@@ -38,8 +48,10 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     userId: string,
     query: FilterTransactionsQuery,
   ): Promise<{ data: Transaction[]; total: number }> {
-    const qb = this.repository
+    const qb = this.getRepository()
       .createQueryBuilder("t")
+      .leftJoinAndSelect("t.category", "category")
+      .leftJoinAndSelect("t.subcategory", "subcategory")
       .where("t.userId = :userId", { userId });
 
     if (query.search) {
@@ -53,6 +65,11 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     if (query.categoryId) {
       qb.andWhere("t.categoryId = :categoryId", {
         categoryId: query.categoryId,
+      });
+    }
+    if (query.subcategoryId) {
+      qb.andWhere("t.subcategoryId = :subcategoryId", {
+        subcategoryId: query.subcategoryId,
       });
     }
     if (query.status) {
@@ -87,8 +104,10 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     userId: string,
     query: Omit<FilterTransactionsQuery, "page" | "limit">,
   ): Promise<Transaction[]> {
-    const qb = this.repository
+    const qb = this.getRepository()
       .createQueryBuilder("t")
+      .leftJoinAndSelect("t.category", "category")
+      .leftJoinAndSelect("t.subcategory", "subcategory")
       .where("t.userId = :userId", { userId });
 
     if (query.search) {
@@ -102,6 +121,11 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     if (query.categoryId) {
       qb.andWhere("t.categoryId = :categoryId", {
         categoryId: query.categoryId,
+      });
+    }
+    if (query.subcategoryId) {
+      qb.andWhere("t.subcategoryId = :subcategoryId", {
+        subcategoryId: query.subcategoryId,
       });
     }
     if (query.status) {
@@ -127,7 +151,7 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     userId: string,
     query: Omit<FilterTransactionsQuery, "page" | "limit">,
   ): Promise<{ totalIncomes: number; totalExpenses: number }> {
-    const qb = this.repository
+    const qb = this.getRepository()
       .createQueryBuilder("t")
       .select(
         "SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END)",
@@ -176,7 +200,7 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     userId: string,
     year: number,
   ): Promise<{ month: string; income: number; expense: number }[]> {
-    const raw = await this.repository
+    const raw = await this.getRepository()
       .createQueryBuilder("t")
       .select([
         "TO_CHAR(CAST(t.date AS DATE), 'MM') as month",
@@ -202,7 +226,7 @@ export class TypeOrmTransactionRepository implements TransactionRepositoryPort {
     month: number,
     year: number,
   ): Promise<{ categoryId: string; name: string; amount: number }[]> {
-    const raw = await this.repository
+    const raw = await this.getRepository()
       .createQueryBuilder("t")
       .select([
         "t.categoryId as categoryId",

@@ -37,4 +37,14 @@ export class TypeORMSubcategoryRepository implements SubcategoryRepositoryPort {
     const saved = await this.repository.save(ormEntity);
     return this.mapToDomain(saved);
   }
+
+  async findById(id: string): Promise<Subcategory | null> {
+    const found = await this.repository.findOne({ where: { id } });
+    if (!found) return null;
+    return this.mapToDomain(found);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
 }

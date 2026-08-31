@@ -19,4 +19,6 @@ export interface CategoryRepositoryPort {
 export const SUBCATEGORY_REPOSITORY = "SubcategoryRepositoryPort";
 export interface SubcategoryRepositoryPort {
   save(subcategory: Subcategory): Promise<Subcategory>;
+  findById(id: string): Promise<Subcategory | null>;
+  delete(id: string): Promise<void>;
 }

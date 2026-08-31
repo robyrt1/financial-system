@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional, IsUUID } from "class-validator";
 import { EncryptedDetailsDto } from "./financial.dto";
 
 export class CreateTransactionDto {
@@ -9,7 +10,17 @@ export class CreateTransactionDto {
     example: "c1b07384-d113-49d5-a504-204123456789",
     nullable: true,
   })
+  @IsOptional()
+  @IsUUID()
   categoryId?: string | null;
+
+  @ApiPropertyOptional({
+    example: "s1b07384-d113-49d5-a504-204123456789",
+    nullable: true,
+  })
+  @IsOptional()
+  @IsUUID()
+  subcategoryId?: string | null;
 
   @ApiPropertyOptional({
     example: "e3b07384-d113-49d5-a504-204123456789",
@@ -59,7 +70,17 @@ export class UpdateTransactionDto {
     example: "c1b07384-d113-49d5-a504-204123456789",
     nullable: true,
   })
+  @IsOptional()
+  @IsUUID()
   categoryId?: string | null;
+
+  @ApiPropertyOptional({
+    example: "s1b07384-d113-49d5-a504-204123456789",
+    nullable: true,
+  })
+  @IsOptional()
+  @IsUUID()
+  subcategoryId?: string | null;
 
   @ApiPropertyOptional({
     example: "e3b07384-d113-49d5-a504-204123456789",
@@ -123,7 +144,14 @@ export class FilterTransactionsQueryDto {
   accountId?: string;
 
   @ApiPropertyOptional({ example: "c1b07384-d113-49d5-a504-204123456789" })
+  @IsOptional()
+  @IsUUID()
   categoryId?: string;
+
+  @ApiPropertyOptional({ example: "s1b07384-d113-49d5-a504-204123456789" })
+  @IsOptional()
+  @IsUUID()
+  subcategoryId?: string;
 
   @ApiPropertyOptional({ example: "2026-08-01" })
   startDate?: string;

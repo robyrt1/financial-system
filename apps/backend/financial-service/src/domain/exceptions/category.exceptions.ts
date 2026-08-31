@@ -67,3 +67,15 @@ export class InvalidCategoryTypeException extends CategoryDomainException {
     this.name = "InvalidCategoryTypeException";
   }
 }
+
+export class SubcategoryNotFoundException extends CategoryDomainException {
+  constructor(id: string) {
+    super(
+      `Subcategory with id ${id} not found`,
+      "FINANCIAL.SUBCATEGORY.NOT_FOUND",
+      "errors.financial.subcategory.not_found",
+      404,
+    );
+    this.name = "SubcategoryNotFoundException";
+  }
+}

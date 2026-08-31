@@ -64,3 +64,8 @@ export const CREATE_SUBCATEGORY_USE_CASE = "CreateSubcategoryUseCase";
 export interface CreateSubcategoryPort {
   execute(command: CreateSubcategoryCommand): Promise<Subcategory>;
 }
+
+export const DELETE_SUBCATEGORY_USE_CASE = "DeleteSubcategoryUseCase";
+export interface DeleteSubcategoryPort {
+  execute(subcategoryId: string, userId: string): Promise<void>;
+}

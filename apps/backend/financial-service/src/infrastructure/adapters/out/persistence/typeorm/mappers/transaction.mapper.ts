@@ -8,6 +8,7 @@ export class TransactionMapper {
       userId: orm.userId,
       accountId: orm.accountId,
       categoryId: orm.categoryId,
+      subcategoryId: orm.subcategoryId,
       destinationAccountId: orm.destinationAccountId,
       description: orm.description,
       amount: Number(orm.amount),
@@ -19,6 +20,12 @@ export class TransactionMapper {
       paymentMethod: orm.paymentMethod as any,
       creditCardId: orm.creditCardId,
       installments: orm.installments,
+      category: orm.category
+        ? { id: orm.category.id, name: orm.category.name }
+        : null,
+      subcategory: orm.subcategory
+        ? { id: orm.subcategory.id, name: orm.subcategory.name }
+        : null,
       createdAt: orm.createdAt,
       updatedAt: orm.updatedAt,
     });
@@ -30,6 +37,7 @@ export class TransactionMapper {
     orm.userId = domain.userId;
     orm.accountId = domain.accountId;
     orm.categoryId = domain.categoryId;
+    orm.subcategoryId = domain.subcategoryId;
     orm.destinationAccountId = domain.destinationAccountId;
     orm.description = domain.description;
     orm.amount = domain.amount;

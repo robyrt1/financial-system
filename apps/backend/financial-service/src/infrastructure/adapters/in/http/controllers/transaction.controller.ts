@@ -16,9 +16,17 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
 import type { Response } from "express";
 import { FINANCIAL_DI_TOKENS } from "@infrastructure/di/tokens";
+import { BaseDomainError } from "@financial-system/shared-errors";
 import type { ListTransactionsPort } from "@domain/ports/in/list-transactions.port";
-import type { ManageTransactionPort } from "@domain/ports/in/manage-transaction.port";
 import type { ExportTransactionsPort } from "@domain/ports/in/export-transactions.port";
+import { CREATE_TRANSACTION_USE_CASE } from "@domain/ports/in/create-transaction.port";
+import type { CreateTransactionPort } from "@domain/ports/in/create-transaction.port";
+import { UPDATE_TRANSACTION_USE_CASE } from "@domain/ports/in/update-transaction.port";
+import type { UpdateTransactionPort } from "@domain/ports/in/update-transaction.port";
+import { DELETE_TRANSACTION_USE_CASE } from "@domain/ports/in/delete-transaction.port";
+import type { DeleteTransactionPort } from "@domain/ports/in/delete-transaction.port";
+import { BULK_TRANSACTION_ACTION_USE_CASE } from "@domain/ports/in/bulk-transaction-action.port";
+import type { BulkTransactionActionPort } from "@domain/ports/in/bulk-transaction-action.port";
 import {
   CreateTransactionDto,
   UpdateTransactionDto,
@@ -41,8 +49,14 @@ export class TransactionController {
   constructor(
     @Inject(FINANCIAL_DI_TOKENS.LIST_TRANSACTIONS_PORT)
     private readonly listTransactionsPort: ListTransactionsPort,
-    @Inject(FINANCIAL_DI_TOKENS.MANAGE_TRANSACTION_PORT)
-    private readonly manageTransactionPort: ManageTransactionPort,
+    @Inject(CREATE_TRANSACTION_USE_CASE)
+    private readonly createTransactionUseCase: CreateTransactionPort,
+    @Inject(UPDATE_TRANSACTION_USE_CASE)
+    private readonly updateTransactionUseCase: UpdateTransactionPort,
+    @Inject(DELETE_TRANSACTION_USE_CASE)
+    private readonly deleteTransactionUseCase: DeleteTransactionPort,
+    @Inject(BULK_TRANSACTION_ACTION_USE_CASE)
+    private readonly bulkTransactionActionUseCase: BulkTransactionActionPort,
     @Inject(FINANCIAL_DI_TOKENS.EXPORT_TRANSACTIONS_PORT)
     private readonly exportTransactionsPort: ExportTransactionsPort,
   ) {}
@@ -78,12 +92,15 @@ export class TransactionController {
         HttpStatus.BAD_REQUEST,
       );
     try {
-      return await this.manageTransactionPort.create(user.userId, {
+      return await this.createTransactionUseCase.execute(user.userId, {
         ...dto,
         categoryId: dto.categoryId ?? null,
         destinationAccountId: dto.destinationAccountId ?? null,
       });
     } catch (err) {
+      if (err instanceof BaseDomainError) {
+        throw new HttpException(err.toJSON(), err.statusCode);
+      }
       const msg = err instanceof Error ? err.message : String(err);
       throw new HttpException(msg, HttpStatus.BAD_REQUEST);
     }
@@ -102,8 +119,11 @@ export class TransactionController {
         HttpStatus.BAD_REQUEST,
       );
     try {
-      return await this.manageTransactionPort.update(user.userId, id, dto);
+      return await this.updateTransactionUseCase.execute(user.userId, id, dto);
     } catch (err) {
+      if (err instanceof BaseDomainError) {
+        throw new HttpException(err.toJSON(), err.statusCode);
+      }
       const msg = err instanceof Error ? err.message : String(err);
       throw new HttpException(msg, HttpStatus.BAD_REQUEST);
     }
@@ -121,9 +141,12 @@ export class TransactionController {
         HttpStatus.BAD_REQUEST,
       );
     try {
-      await this.manageTransactionPort.delete(user.userId, id);
+      await this.deleteTransactionUseCase.execute(user.userId, id);
       return { success: true };
     } catch (err) {
+      if (err instanceof BaseDomainError) {
+        throw new HttpException(err.toJSON(), err.statusCode);
+      }
       const msg = err instanceof Error ? err.message : String(err);
       throw new HttpException(msg, HttpStatus.BAD_REQUEST);
     }
@@ -141,9 +164,12 @@ export class TransactionController {
         HttpStatus.BAD_REQUEST,
       );
     try {
-      await this.manageTransactionPort.bulkAction(user.userId, dto);
+      await this.bulkTransactionActionUseCase.execute(user.userId, dto);
       return { success: true };
     } catch (err) {
+      if (err instanceof BaseDomainError) {
+        throw new HttpException(err.toJSON(), err.statusCode);
+      }
       const msg = err instanceof Error ? err.message : String(err);
       throw new HttpException(msg, HttpStatus.BAD_REQUEST);
     }

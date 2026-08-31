@@ -6,14 +6,14 @@ import { KpiGrid } from "./KpiGrid";
 import { SecurityCenter } from "./SecurityCenter";
 import { CashFlowChart } from "./CashFlowChart";
 import { CategoryDistribution } from "./CategoryDistribution";
-import { TransactionsTable } from "./TransactionsTable";
-import type { Transaction } from "./TransactionsTable";
+import { TransactionsTable } from "../../transactions/components/TransactionsTable";
+import type { Transaction } from "../../transactions/components/TransactionsTable";
 import { SearchModal } from "./SearchModal";
-import { NewTransactionModal } from "./NewTransactionModal";
+import { NewTransactionModal } from "../../transactions/components/NewTransactionModal";
 import { Card } from "../../../components/ui/Card";
 import { SettingsTab } from "./SettingsTab";
 import AccountsTab from "./AccountsTab";
-import TransactionsTab from "./TransactionsTab";
+import TransactionsTab from "../../transactions/components/TransactionsTab";
 import CategoriesTab from "../../categories/components/CategoriesTab";
 import GoalsTab from "../../goals/components/GoalsTab";
 import { useNavigate } from "react-router-dom";
@@ -93,11 +93,15 @@ export function DashboardScreen({
     const accountName =
       accounts.find((a) => a.id === tx.accountId)?.name || "Desconhecido";
     const categoryName =
-      categories.find((c) => c.id === tx.categoryId)?.name || "Geral";
+      tx.category?.name ||
+      categories.find((c) => c.id === tx.categoryId)?.name ||
+      "Geral";
+    const subcategoryName = tx.subcategory?.name || null;
     return {
       id: tx.id,
       name: tx.description,
       category: categoryName,
+      subcategory: subcategoryName,
       date: tx.date,
       account: accountName,
       status:

@@ -4,7 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
+import { CategoryORMEntity } from "./category.orm-entity";
+import { SubcategoryORMEntity } from "./subcategory.orm-entity";
 
 @Entity("transactions")
 export class TransactionORMEntity {
@@ -19,6 +23,9 @@ export class TransactionORMEntity {
 
   @Column("uuid", { nullable: true })
   categoryId!: string | null;
+
+  @Column("uuid", { nullable: true })
+  subcategoryId!: string | null;
 
   @Column("uuid", { nullable: true })
   destinationAccountId!: string | null;
@@ -56,6 +63,17 @@ export class TransactionORMEntity {
 
   @Column("int", { default: 1 })
   installments!: number;
+
+  @ManyToOne(() => CategoryORMEntity, { nullable: true, onDelete: "SET NULL" })
+  @JoinColumn({ name: "categoryId" })
+  category!: CategoryORMEntity | null;
+
+  @ManyToOne(() => SubcategoryORMEntity, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
+  @JoinColumn({ name: "subcategoryId" })
+  subcategory!: SubcategoryORMEntity | null;
 
   @CreateDateColumn()
   createdAt!: Date;

@@ -3,6 +3,7 @@ import { Transaction } from "../../entities/transaction.entity";
 export interface CreateTransactionCommand {
   accountId?: string;
   categoryId: string | null;
+  subcategoryId?: string | null;
   destinationAccountId: string | null;
   description: string;
   amount: number;
@@ -23,6 +24,7 @@ export interface CreateTransactionCommand {
 export interface UpdateTransactionCommand {
   accountId?: string;
   categoryId?: string | null;
+  subcategoryId?: string | null;
   destinationAccountId?: string | null;
   description?: string;
   amount?: number;

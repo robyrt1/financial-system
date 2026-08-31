@@ -13,7 +13,13 @@ import { ManageAccountUseCase } from "@application/use-cases/account/manage-acco
 import { ManageCreditCardUseCase } from "@application/use-cases/credit-card/manage-credit-card.use-case";
 import { GetInvoiceProjectionsUseCase } from "@application/use-cases/invoice/get-invoice-projections.use-case";
 import { ListTransactionsUseCase } from "@application/use-cases/transaction/list-transactions.use-case";
+import { CreateTransactionUseCase } from "@application/use-cases/transaction/create-transaction.use-case";
+import { UpdateTransactionUseCase } from "@application/use-cases/transaction/update-transaction.use-case";
+import { DeleteTransactionUseCase } from "@application/use-cases/transaction/delete-transaction.use-case";
+import { BulkTransactionActionUseCase } from "@application/use-cases/transaction/bulk-transaction-action.use-case";
 import { ManageTransactionUseCase } from "@application/use-cases/transaction/manage-transaction.use-case";
+import { AccountTransactionStrategy } from "@application/use-cases/transaction/strategies/account-transaction.strategy";
+import { CreditCardTransactionStrategy } from "@application/use-cases/transaction/strategies/credit-card-transaction.strategy";
 import { ExportTransactionsUseCase } from "@application/use-cases/transaction/export-transactions.use-case";
 import { PayInvoiceUseCase } from "@application/use-cases/invoice/pay-invoice.use-case";
 import { TypeOrmTransactionRepository } from "../adapters/out/persistence/typeorm/repositories/typeorm-transaction.repository";
@@ -25,6 +31,13 @@ import { InvoiceRepositoryPort } from "@domain/ports/out/invoice-repository.port
 import { EventPublisherPort } from "@domain/ports/out/event-publisher.port";
 import { TransactionRepositoryPort } from "@domain/ports/out/transaction-repository.port";
 import { GetAccountsSummaryPort } from "@domain/ports/in/get-accounts-summary.port";
+import { SUBCATEGORY_REPOSITORY } from "@domain/ports/out/category-out.ports";
+import { UNIT_OF_WORK } from "@domain/ports/out/unit-of-work.port";
+import { CREATE_TRANSACTION_USE_CASE } from "@domain/ports/in/create-transaction.port";
+import { UPDATE_TRANSACTION_USE_CASE } from "@domain/ports/in/update-transaction.port";
+import { DELETE_TRANSACTION_USE_CASE } from "@domain/ports/in/delete-transaction.port";
+import { BULK_TRANSACTION_ACTION_USE_CASE } from "@domain/ports/in/bulk-transaction-action.port";
+import { TypeOrmUnitOfWorkAdapter } from "../adapters/out/persistence/typeorm-unit-of-work.adapter";
 
 export const financialProviders: Provider[] = [
   // Repositories
@@ -123,27 +136,130 @@ export const financialProviders: Provider[] = [
     inject: [FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT],
   },
   {
-    provide: FINANCIAL_DI_TOKENS.MANAGE_TRANSACTION_PORT,
+    provide: UNIT_OF_WORK,
+    useClass: TypeOrmUnitOfWorkAdapter,
+  },
+  {
+    provide: AccountTransactionStrategy,
+    useFactory: (accountRepo: AccountRepositoryPort) =>
+      new AccountTransactionStrategy(accountRepo),
+    inject: [FINANCIAL_DI_TOKENS.ACCOUNT_REPOSITORY_PORT],
+  },
+  {
+    provide: CreditCardTransactionStrategy,
     useFactory: (
-      dataSource: DataSource,
-      txRepo: TransactionRepositoryPort,
-      accountRepo: AccountRepositoryPort,
       cardRepo: CreditCardRepositoryPort,
       invoiceRepo: InvoiceRepositoryPort,
-    ) =>
-      new ManageTransactionUseCase(
-        dataSource,
-        txRepo,
-        accountRepo,
-        cardRepo,
-        invoiceRepo,
-      ),
+    ) => new CreditCardTransactionStrategy(cardRepo, invoiceRepo),
     inject: [
-      DataSource,
-      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
-      FINANCIAL_DI_TOKENS.ACCOUNT_REPOSITORY_PORT,
       FINANCIAL_DI_TOKENS.CREDIT_CARD_REPOSITORY_PORT,
       FINANCIAL_DI_TOKENS.INVOICE_REPOSITORY_PORT,
+    ],
+  },
+  {
+    provide: CREATE_TRANSACTION_USE_CASE,
+    useFactory: (
+      uow: any,
+      txRepo: TransactionRepositoryPort,
+      subcatRepo: any,
+      accountStrategy: AccountTransactionStrategy,
+      creditCardStrategy: CreditCardTransactionStrategy,
+    ) =>
+      new CreateTransactionUseCase(
+        uow,
+        txRepo,
+        subcatRepo,
+        accountStrategy,
+        creditCardStrategy,
+      ),
+    inject: [
+      UNIT_OF_WORK,
+      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
+      SUBCATEGORY_REPOSITORY,
+      AccountTransactionStrategy,
+      CreditCardTransactionStrategy,
+    ],
+  },
+  {
+    provide: UPDATE_TRANSACTION_USE_CASE,
+    useFactory: (
+      uow: any,
+      txRepo: TransactionRepositoryPort,
+      subcatRepo: any,
+      accountStrategy: AccountTransactionStrategy,
+      creditCardStrategy: CreditCardTransactionStrategy,
+    ) =>
+      new UpdateTransactionUseCase(
+        uow,
+        txRepo,
+        subcatRepo,
+        accountStrategy,
+        creditCardStrategy,
+      ),
+    inject: [
+      UNIT_OF_WORK,
+      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
+      SUBCATEGORY_REPOSITORY,
+      AccountTransactionStrategy,
+      CreditCardTransactionStrategy,
+    ],
+  },
+  {
+    provide: DELETE_TRANSACTION_USE_CASE,
+    useFactory: (
+      uow: any,
+      txRepo: TransactionRepositoryPort,
+      accountStrategy: AccountTransactionStrategy,
+      creditCardStrategy: CreditCardTransactionStrategy,
+    ) =>
+      new DeleteTransactionUseCase(
+        uow,
+        txRepo,
+        accountStrategy,
+        creditCardStrategy,
+      ),
+    inject: [
+      UNIT_OF_WORK,
+      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
+      AccountTransactionStrategy,
+      CreditCardTransactionStrategy,
+    ],
+  },
+  {
+    provide: BULK_TRANSACTION_ACTION_USE_CASE,
+    useFactory: (
+      uow: any,
+      txRepo: TransactionRepositoryPort,
+      accountRepo: AccountRepositoryPort,
+      deleteUseCase: any,
+    ) =>
+      new BulkTransactionActionUseCase(uow, txRepo, accountRepo, deleteUseCase),
+    inject: [
+      UNIT_OF_WORK,
+      FINANCIAL_DI_TOKENS.TRANSACTION_REPOSITORY_PORT,
+      FINANCIAL_DI_TOKENS.ACCOUNT_REPOSITORY_PORT,
+      DELETE_TRANSACTION_USE_CASE,
+    ],
+  },
+  {
+    provide: FINANCIAL_DI_TOKENS.MANAGE_TRANSACTION_PORT,
+    useFactory: (
+      createUseCase: any,
+      updateUseCase: any,
+      deleteUseCase: any,
+      bulkUseCase: any,
+    ) =>
+      new ManageTransactionUseCase(
+        createUseCase,
+        updateUseCase,
+        deleteUseCase,
+        bulkUseCase,
+      ),
+    inject: [
+      CREATE_TRANSACTION_USE_CASE,
+      UPDATE_TRANSACTION_USE_CASE,
+      DELETE_TRANSACTION_USE_CASE,
+      BULK_TRANSACTION_ACTION_USE_CASE,
     ],
   },
   {

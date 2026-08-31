@@ -11,6 +11,7 @@ export interface Transaction {
   id: string;
   name: string;
   category: string;
+  subcategory?: string | null;
   date: string;
   account: string;
   status: "confirmed" | "pending" | "blocked";
@@ -94,7 +95,16 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
 
               {/* Category */}
               <td className="py-3.5 px-4 text-content-body font-medium">
-                {tx.category}
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-bold text-xs uppercase tracking-wide bg-navy-50 dark:bg-navy-950 px-2 py-0.5 rounded border border-stroke text-content-title inline-block w-fit">
+                    {tx.category}
+                  </span>
+                  {tx.subcategory && (
+                    <span className="text-[10px] text-cyan-400 font-semibold font-mono pl-1">
+                      ↳ {tx.subcategory}
+                    </span>
+                  )}
+                </div>
               </td>
 
               {/* Account */}

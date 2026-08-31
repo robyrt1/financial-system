@@ -42,6 +42,7 @@ export function NewTransactionModal({
     creditCardId: "",
     installments: 1,
     categoryId: "",
+    subcategoryId: "",
     date: new Date().toISOString().split("T")[0],
     tags: "",
   });
@@ -139,6 +140,8 @@ export function NewTransactionModal({
         destinationAccountId:
           newTx.type === "TRANSFER" ? newTx.destinationAccountId : null,
         categoryId: newTx.type !== "TRANSFER" ? newTx.categoryId || null : null,
+        subcategoryId:
+          newTx.type !== "TRANSFER" ? newTx.subcategoryId || null : null,
         date: newTx.date,
         tags: tagsArray,
         paymentMethod: newTx.paymentMethod,
@@ -157,6 +160,7 @@ export function NewTransactionModal({
         paymentMethod: "ACCOUNT",
         creditCardId: cards[0]?.id || "",
         categoryId: categories[0]?.id || "",
+        subcategoryId: "",
         installments: 1,
         date: new Date().toISOString().split("T")[0],
         tags: "",
@@ -300,31 +304,76 @@ export function NewTransactionModal({
 
           {/* Category (Not for Transfer) */}
           {newTx.type !== "TRANSFER" && (
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-content-muted uppercase">
-                Categoria
-              </label>
-              <select
-                required
-                value={newTx.categoryId}
-                onChange={(e) =>
-                  setNewTx((prev) => ({
-                    ...prev,
-                    categoryId: e.target.value,
-                  }))
-                }
-                className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
-              >
-                <option value="">Selecione uma categoria...</option>
-                {categories
-                  .filter((c) => c.type === "ALL" || c.type === newTx.type)
-                  .map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
+            <>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-content-muted uppercase">
+                  Categoria
+                </label>
+                <select
+                  required
+                  value={newTx.categoryId}
+                  onChange={(e) =>
+                    setNewTx((prev) => ({
+                      ...prev,
+                      categoryId: e.target.value,
+                      subcategoryId: "",
+                    }))
+                  }
+                  className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+                >
+                  <option value="">Selecione uma categoria...</option>
+                  {categories
+                    .filter((c) => c.type === "ALL" || c.type === newTx.type)
+                    .map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-content-muted uppercase">
+                  Subcategoria
+                </label>
+                <select
+                  disabled={
+                    !newTx.categoryId ||
+                    !(
+                      categories.find((c) => c.id === newTx.categoryId)
+                        ?.subcategories?.length > 0
+                    )
+                  }
+                  value={newTx.subcategoryId}
+                  onChange={(e) =>
+                    setNewTx((prev) => ({
+                      ...prev,
+                      subcategoryId: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-surface-base border border-stroke rounded-xl px-3.5 py-2.5 text-[12px] text-content-title focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">
+                    {!newTx.categoryId
+                      ? "Selecione uma categoria primeiro..."
+                      : !(
+                            categories.find((c) => c.id === newTx.categoryId)
+                              ?.subcategories?.length > 0
+                          )
+                        ? "Nenhuma subcategoria cadastrada"
+                        : "Selecione uma subcategoria..."}
+                  </option>
+                  {(
+                    categories.find((c) => c.id === newTx.categoryId)
+                      ?.subcategories || []
+                  ).map((sub: any) => (
+                    <option key={sub.id} value={sub.id}>
+                      {sub.name}
                     </option>
                   ))}
-              </select>
-            </div>
+                </select>
+              </div>
+            </>
           )}
 
           {/* Limit Exceeded Alert */}

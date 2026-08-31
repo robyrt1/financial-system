@@ -34,6 +34,7 @@ import {
   UPDATE_CATEGORY_BUDGET_USE_CASE,
   DELETE_CATEGORY_USE_CASE,
   CREATE_SUBCATEGORY_USE_CASE,
+  DELETE_SUBCATEGORY_USE_CASE,
 } from "@domain/ports/in/category-in.ports";
 import type {
   ListCategoriesWithBudgetPort,
@@ -42,6 +43,7 @@ import type {
   UpdateCategoryBudgetPort,
   DeleteCategoryPort,
   CreateSubcategoryPort,
+  DeleteSubcategoryPort,
 } from "@domain/ports/in/category-in.ports";
 
 @ApiTags("Categories")
@@ -61,6 +63,8 @@ export class CategoryController {
     private readonly deleteCategoryUseCase: DeleteCategoryPort,
     @Inject(CREATE_SUBCATEGORY_USE_CASE)
     private readonly createSubcategoryUseCase: CreateSubcategoryPort,
+    @Inject(DELETE_SUBCATEGORY_USE_CASE)
+    private readonly deleteSubcategoryUseCase: DeleteSubcategoryPort,
   ) {}
 
   @Get()
@@ -154,5 +158,17 @@ export class CategoryController {
       name: dto.name,
     });
     return { id: subcategory.id };
+  }
+
+  @Delete("/v1/subcategories/:id")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: "Delete a subcategory" })
+  @ApiResponse({ status: 204 })
+  async deleteSubcategory(
+    @CurrentUser() user: InternalUserContext,
+    @Param("id") id: string,
+  ) {
+    const userId = user.userId;
+    await this.deleteSubcategoryUseCase.execute(id, userId);
   }
 }

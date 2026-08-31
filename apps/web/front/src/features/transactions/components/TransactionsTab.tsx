@@ -26,6 +26,7 @@ interface Transaction {
   userId: string;
   accountId: string;
   categoryId: string | null;
+  subcategoryId?: string | null;
   destinationAccountId: string | null;
   description: string;
   amount: number;
@@ -33,6 +34,8 @@ interface Transaction {
   status: "SETTLED" | "PENDING" | "SCHEDULED";
   date: string;
   tags: string[];
+  category?: { id: string; name: string } | null;
+  subcategory?: { id: string; name: string } | null;
   createdAt: string;
 }
 
@@ -46,6 +49,7 @@ export default function TransactionsTab() {
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [summary, setSummary] = useState<SummaryMetrics>({
     totalIncomes: 0,
     totalExpenses: 0,
@@ -57,6 +61,8 @@ export default function TransactionsTab() {
   const [type, setType] = useState<string>("ALL");
   const [status, setStatus] = useState<string>("ALL");
   const [accountId, setAccountId] = useState<string>("ALL");
+  const [filterCategoryId, setFilterCategoryId] = useState<string>("ALL");
+  const [filterSubcategoryId, setFilterSubcategoryId] = useState<string>("ALL");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -82,6 +88,15 @@ export default function TransactionsTab() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get<any[]>("/categories");
+      setCategories(response.data);
+    } catch (err) {
+      console.error("Erro ao buscar categorias:", err);
+    }
+  };
+
   // Fetch Transactions list
   const fetchTransactions = async () => {
     setLoading(true);
@@ -94,6 +109,9 @@ export default function TransactionsTab() {
       if (type !== "ALL") queryParams.type = type;
       if (status !== "ALL") queryParams.status = status;
       if (accountId !== "ALL") queryParams.accountId = accountId;
+      if (filterCategoryId !== "ALL") queryParams.categoryId = filterCategoryId;
+      if (filterSubcategoryId !== "ALL")
+        queryParams.subcategoryId = filterSubcategoryId;
       if (startDate) queryParams.startDate = startDate;
       if (endDate) queryParams.endDate = endDate;
 
@@ -118,11 +136,21 @@ export default function TransactionsTab() {
 
   useEffect(() => {
     fetchAccounts();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
     fetchTransactions();
-  }, [page, type, status, accountId, startDate, endDate]);
+  }, [
+    page,
+    type,
+    status,
+    accountId,
+    filterCategoryId,
+    filterSubcategoryId,
+    startDate,
+    endDate,
+  ]);
 
   const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -184,6 +212,9 @@ export default function TransactionsTab() {
       if (type !== "ALL") queryParams.type = type;
       if (status !== "ALL") queryParams.status = status;
       if (accountId !== "ALL") queryParams.accountId = accountId;
+      if (filterCategoryId !== "ALL") queryParams.categoryId = filterCategoryId;
+      if (filterSubcategoryId !== "ALL")
+        queryParams.subcategoryId = filterSubcategoryId;
       if (startDate) queryParams.startDate = startDate;
       if (endDate) queryParams.endDate = endDate;
 
@@ -368,6 +399,65 @@ export default function TransactionsTab() {
             </select>
           </div>
 
+          {/* Category Filter */}
+          <div className="flex-1 relative min-w-[120px]">
+            <select
+              value={filterCategoryId}
+              onChange={(e) => {
+                setFilterCategoryId(e.target.value);
+                setFilterSubcategoryId("ALL");
+                setPage(1);
+              }}
+              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer"
+            >
+              <option value="ALL">Categoria (Todas)</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Subcategory Filter */}
+          <div className="flex-1 relative min-w-[120px]">
+            <select
+              disabled={
+                filterCategoryId === "ALL" ||
+                !(
+                  categories.find((c) => c.id === filterCategoryId)
+                    ?.subcategories?.length > 0
+                )
+              }
+              value={filterSubcategoryId}
+              onChange={(e) => {
+                setFilterSubcategoryId(e.target.value);
+                setPage(1);
+              }}
+              className="w-full bg-surface-base border border-stroke rounded-xl px-3 py-2 text-md text-content-title font-sans focus:outline-none focus:border-cyan-500 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="ALL">
+                {filterCategoryId === "ALL"
+                  ? "Subcategoria (Todas)"
+                  : !(
+                        categories.find((c) => c.id === filterCategoryId)
+                          ?.subcategories?.length > 0
+                      )
+                    ? "Nenhuma subcategoria"
+                    : "Subcategoria (Todas)"}
+              </option>
+              {filterCategoryId !== "ALL" &&
+                (
+                  categories.find((c) => c.id === filterCategoryId)
+                    ?.subcategories || []
+                ).map((sub: any) => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+
           {/* Export Options */}
           <div className="flex gap-2 justify-end shrink-0 w-full md:w-auto">
             <button
@@ -476,6 +566,9 @@ export default function TransactionsTab() {
                 <th className="p-4 font-bold uppercase tracking-wider">
                   Descrição / Tags
                 </th>
+                <th className="p-4 font-bold uppercase tracking-wider">
+                  Categoria
+                </th>
                 <th className="p-4 font-bold uppercase tracking-wider">Tipo</th>
                 <th className="p-4 font-bold uppercase tracking-wider">
                   Conta
@@ -493,7 +586,7 @@ export default function TransactionsTab() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="p-10 text-center text-cyan-400 font-mono text-md"
                   >
                     Carregando transações corporativas...
@@ -502,7 +595,7 @@ export default function TransactionsTab() {
               ) : transactions.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="p-10 text-center text-content-muted font-sans text-md"
                   >
                     Nenhuma transação encontrada para os filtros selecionados.
@@ -592,6 +685,20 @@ export default function TransactionsTab() {
                                 </span>
                               ))}
                             </div>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Category Badge */}
+                      <td className="p-4 text-content-body font-medium select-none">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-bold text-[10px] uppercase tracking-wide bg-navy-50 dark:bg-navy-950 px-2 py-0.5 rounded border border-stroke text-content-title inline-block w-fit">
+                            {t.category?.name || "Geral"}
+                          </span>
+                          {t.subcategory && (
+                            <span className="text-[10px] text-cyan-400 font-semibold font-mono pl-1">
+                              ↳ {t.subcategory.name}
+                            </span>
                           )}
                         </div>
                       </td>

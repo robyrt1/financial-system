@@ -6,6 +6,7 @@ export interface FilterTransactionsQuery {
   status?: string;
   accountId?: string;
   categoryId?: string;
+  subcategoryId?: string;
   startDate?: string;
   endDate?: string;
   page?: number;

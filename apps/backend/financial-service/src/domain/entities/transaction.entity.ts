@@ -13,6 +13,7 @@ export interface TransactionProps {
   userId: string;
   accountId: string;
   categoryId: string | null;
+  subcategoryId?: string | null;
   destinationAccountId: string | null;
   description: string;
   amount: number;
@@ -24,6 +25,8 @@ export interface TransactionProps {
   paymentMethod?: PaymentMethod;
   creditCardId?: string | null;
   installments?: number;
+  category?: { id: string; name: string } | null;
+  subcategory?: { id: string; name: string } | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -33,6 +36,7 @@ export class Transaction {
   public readonly userId: string;
   public readonly accountId: string;
   public readonly categoryId: string | null;
+  public readonly subcategoryId: string | null;
   public readonly destinationAccountId: string | null;
   public readonly description: string;
   public amount: number;
@@ -44,6 +48,8 @@ export class Transaction {
   public readonly paymentMethod: PaymentMethod;
   public readonly creditCardId: string | null;
   public readonly installments: number;
+  public readonly category: { id: string; name: string } | null;
+  public readonly subcategory: { id: string; name: string } | null;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
 
@@ -52,6 +58,7 @@ export class Transaction {
     this.userId = props.userId;
     this.accountId = props.accountId;
     this.categoryId = props.categoryId;
+    this.subcategoryId = props.subcategoryId || null;
     this.destinationAccountId = props.destinationAccountId;
     this.description = props.description;
     this.amount = props.amount;
@@ -63,6 +70,8 @@ export class Transaction {
     this.paymentMethod = props.paymentMethod || "ACCOUNT";
     this.creditCardId = props.creditCardId || null;
     this.installments = props.installments || 1;
+    this.category = props.category || null;
+    this.subcategory = props.subcategory || null;
     this.createdAt = props.createdAt || new Date();
     this.updatedAt = props.updatedAt || new Date();
   }
